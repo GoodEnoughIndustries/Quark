@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - name: Install dependencies
-      run: dotnet restore src\Quark.sln
+      run: dotnet restore src/Quark.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore src\Quark.sln
+      run: dotnet build --configuration Release --no-restore src/Quark.sln
     - name: Test
-      run: dotnet test --no-restore --verbosity normal src\Quark.sln
+      run: dotnet test --no-restore --verbosity normal src/Quark.sln
