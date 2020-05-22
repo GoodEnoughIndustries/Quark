@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Chad Jessup</Authors>
+    <Company>Good Enough Industries</Company>
+    <Product>Quark</Product>
+    <PackageId>Quark</PackageId>
+    <Version>0.0.1</Version>
+    <PackageVersion>$(Version)</PackageVersion>
+  </PropertyGroup>
+
+ <PropertyGroup>
+   <!--<LangVersion>9</LangVersion>-->
+   <Deterministic>true</Deterministic>
+   <Nullable>enable</Nullable>
+ </PropertyGroup>
+</Project>
