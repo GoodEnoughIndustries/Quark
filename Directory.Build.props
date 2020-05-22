@@ -3,7 +3,6 @@
     <Authors>Chad Jessup</Authors>
     <Company>Good Enough Industries</Company>
     <Product>Quark</Product>
-    <PackageId>Quark</PackageId>
     <Version>0.0.1</Version>
     <PackageVersion>$(Version)</PackageVersion>
   </PropertyGroup>
