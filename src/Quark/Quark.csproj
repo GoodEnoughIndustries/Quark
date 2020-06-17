@@ -6,16 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.8.11" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.0-preview.4.20257.10" />
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="5.0.0-preview.4.20251.6" />
+    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.0-preview.5.20279.2" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="Microsoft.NetCore.Analyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,8 +25,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Polly" Version="7.2.1" />
-    <PackageReference Include="System.Text.Json" Version="5.0.0-preview.4.20251.6" />
-    <PackageReference Include="System.Threading.Channels" Version="5.0.0-preview.4.20251.6" />
+    <PackageReference Include="System.Text.Json" Version="5.0.0-preview.5.20278.1" />
+    <PackageReference Include="System.Threading.Channels" Version="5.0.0-preview.5.20278.1" />
   </ItemGroup>
 
 </Project>
