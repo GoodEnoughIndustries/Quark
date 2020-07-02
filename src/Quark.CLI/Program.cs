@@ -3,18 +3,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Builder;
 using System.CommandLine.Hosting;
 using System.CommandLine.Invocation;
 using System.CommandLine.IO;
 using System.CommandLine.Parsing;
+using System.CommandLine.Rendering;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Quark.CLI
 {
-    public class Program
+    public partial class Program
     {
         private static IConfiguration configuration = new ConfigurationBuilder()
             .Build();
@@ -25,19 +28,24 @@ namespace Quark.CLI
 
             var parser = new CommandLineBuilder(rootCommand)
                 .UseQuarkCommandLineOptions()
+                .RegisterWithDotnetSuggest()
                 .UseExceptionHandler(HandleException)
                 .UseHost(CreateHostBuilder, host =>
                 {
                     host.ConfigureHostConfiguration(config =>
                     {
-                        AddConfigurationSources(args, config);
+                        configuration = AddConfigurationSources(args, config).Build();
                     });
 
                     host.ConfigureServices(ConfigureServices);
                 })
                 .Build();
 
-            return await parser.InvokeAsync(args).ConfigureAwait(false);
+            var result = await parser
+                .InvokeAsync(args)
+                .ConfigureAwait(false);
+
+            return result;
         }
 
         private static IConfigurationBuilder AddConfigurationSources(string[] args, IConfigurationBuilder config)
@@ -55,37 +63,23 @@ namespace Quark.CLI
             var root = new RootCommand
             {
                 Description = "Quark",
-                TreatUnmatchedTokensAsErrors = false,
-                Handler = CommandHandler.Create<IHost>(Run),
+                 
             };
 
-            root.Add(UrlArgument());
+            root.Add(CheckCommand());
 
             return root;
-        }
-
-        private static Option<Uri> UrlArgument()
-        => new Option<Uri>(
-           alias: "--url",
-           getDefaultValue: () => new Uri("http://localhost:9095/"),
-           description: "Url to running Kapacitor instance")
-           {
-               Required = true,
-           };
-
-        private static void Run(IHost host)
-        {
-            var serviceProvider = host.Services;
-            configuration = serviceProvider.GetRequiredService<IConfiguration>();
-
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger(typeof(Program));
-            logger.LogInformation("Hello World!");
         }
 
         private static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args)
+            => Host.CreateDefaultBuilder(args)
+            .ConfigureHostConfiguration(builder =>
+            {
+            });
 
         private static void HandleException(Exception exception, InvocationContext context)
         {
@@ -105,11 +99,5 @@ namespace Quark.CLI
                 context.Console.Error.WriteLine(exception.ToString());
             }
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args)
-            => Host.CreateDefaultBuilder(args)
-                .ConfigureHostConfiguration(builder =>
-                {
-                });
     }
 }

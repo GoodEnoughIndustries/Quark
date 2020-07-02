@@ -2,7 +2,7 @@
   "profiles": {
     "Quark.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "-h"
+      "commandLineArgs": "check --targets localhost host.json devworld[01:10] --runbooks runbook.yml"
     }
   }
 }
