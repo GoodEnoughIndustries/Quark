@@ -18,10 +18,7 @@ namespace Quark
         {
         }
 
-        public IEnumerable<IQuarkTargetGroup> WithTag(string tag)
-        {
-            return Enumerable.Empty<IQuarkTargetGroup>();
-        }
+        public IEnumerable<IQuarkTargetGroup> WithTag(string tag) => Enumerable.Empty<IQuarkTargetGroup>();
 
         IQuarkTargetGroup IQuarkTargetGroup.WithTag(string tag) => throw new System.NotImplementedException();
 

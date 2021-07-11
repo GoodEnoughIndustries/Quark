@@ -16,13 +16,13 @@ namespace Quark.CLI
                 alias: "--metadata",
                 description: "Paths to files containing runbooks.")
             {
-                IsRequired = required,
-                Argument = new Argument<IEnumerable<QuarkRunbook>>
-                {
-                    Arity = ArgumentArity.OneOrMore,
-                }
-                .LegalFilePathsOnly()
-                .AddSuggestions("hosts.json", "hosts.xml", "targets.yml", "localhost", "server[01:10]"),
+                //IsRequired = required,
+                //Argument = new Argument<IEnumerable<QuarkRunbook>>
+                //{
+                //    Arity = ArgumentArity.OneOrMore,
+                //}
+                //.LegalFilePathsOnly()
+                //.AddSuggestions("hosts.json", "hosts.xml", "targets.yml", "localhost", "server[01:10]"),
             };
 
             return metadataOption;
@@ -35,12 +35,12 @@ namespace Quark.CLI
                 description: "Paths to files containing runbooks.")
             {
                 IsRequired = required,
-                Argument = new Argument<IEnumerable<QuarkRunbook>>
-                {
-                    Arity = ArgumentArity.OneOrMore,
-                }
-                .LegalFilePathsOnly()
-                .AddSuggestions("hosts.json", "hosts.xml", "targets.yml", "localhost", "server[01:10]"),
+                //Argument = new Argument<IEnumerable<QuarkRunbook>>
+                //{
+                //    Arity = ArgumentArity.OneOrMore,
+                //}
+                //.LegalFilePathsOnly()
+                //.AddSuggestions("hosts.json", "hosts.xml", "targets.yml", "localhost", "server[01:10]"),
             };
 
             return runbookOptions;
@@ -53,12 +53,12 @@ namespace Quark.CLI
                 description: "Paths to files containing target machines, or comma delimited patterns of target names.")
             {
                 IsRequired = required,
-                Argument = new Argument<IEnumerable<QuarkTarget>>
-                {
-                    Arity = ArgumentArity.OneOrMore,
-                }
-                .LegalFilePathsOnly()
-                .AddSuggestions("hosts.json", "hosts.xml", "targets.yml", "localhost", "server[01:10]"),
+                //Argument = new Argument<IEnumerable<QuarkTarget>>
+                //{
+                //    Arity = ArgumentArity.OneOrMore,
+                //}
+                //.LegalFilePathsOnly()
+                //.AddSuggestions("hosts.json", "hosts.xml", "targets.yml", "localhost", "server[01:10]"),
             };
 
             targetsOption.AddAlias("--hosts");
