@@ -12,6 +12,17 @@ namespace Quark
     {
         public static QuarkConfigurationBuilder WithTargets(
             this QuarkConfigurationBuilder builder,
+            IEnumerable<IQuarkTargetGroup> targets)
+            => throw new Exception();
+
+        public static QuarkConfigurationBuilder WithTargets(
+            this QuarkConfigurationBuilder builder,
+            string pattern,
+            params string[] tags)
+            => throw new Exception();
+
+        public static QuarkConfigurationBuilder WithTargets(
+            this QuarkConfigurationBuilder builder,
             string filePath)
         {
             if (builder is null)
@@ -47,6 +58,10 @@ namespace Quark
 
             return builder;
         }
+
+        public static QuarkConfigurationBuilder WithVariable(this QuarkConfigurationBuilder builder, string key, string value) => builder;
+
+        public static QuarkConfigurationBuilder WithJinja2Template(this QuarkConfigurationBuilder builder, string localPath, string remotePath) => builder;
 
         public static QuarkConfigurationBuilder WithQuarkFiles(
             this QuarkConfigurationBuilder builder,

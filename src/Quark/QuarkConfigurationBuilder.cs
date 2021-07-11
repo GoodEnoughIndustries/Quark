@@ -8,20 +8,17 @@ namespace Quark
     public class QuarkConfigurationBuilder
     {
         public List<string> TargetNames { get; } = new List<string>();
+
         public List<DirectoryInfo> FileLocations { get; } = new List<DirectoryInfo>();
         public List<IQuarkTask> QuarkTasks { get; } = new List<IQuarkTask>();
 
-        public IQuarkConfiguration Build()
-        {
-
-            return new QuarkConfiguration(this);
-        }
+        public IQuarkConfiguration Build() => new QuarkConfiguration(this);
 
         public QuarkConfigurationBuilder AddTarget(string target)
         {
             if (string.IsNullOrWhiteSpace(target))
             {
-                throw new ArgumentException("message", nameof(target));
+                throw new ArgumentNullException(nameof(target));
             }
 
             this.TargetNames.Add(target);
@@ -33,11 +30,10 @@ namespace Quark
         {
             if (string.IsNullOrWhiteSpace(folderPath))
             {
-                throw new ArgumentException("message", nameof(folderPath));
+                throw new ArgumentNullException(nameof(folderPath));
             }
 
-            var di = new DirectoryInfo(folderPath);
-            this.FileLocations.Add(di);
+            this.FileLocations.Add(new DirectoryInfo(folderPath));
 
             return this;
         }
@@ -53,5 +49,8 @@ namespace Quark
 
             return this;
         }
+
+        public QuarkConfigurationBuilder ConfigureTelegraf(List<IQuarkTargetGroup> elasticSearchNodes) => throw new NotImplementedException();
+        public QuarkConfigurationBuilder ConfigureSnmp(List<IQuarkTargetGroup> elasticSearchNodes) => throw new NotImplementedException();
     }
 }
