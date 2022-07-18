@@ -1,15 +1,16 @@
-﻿using Quark;
 using Quark.Abstractions;
-using Quark.Elasticsearch;
 using Quark.System;
-using System.Collections.Generic;
+using Quark;
 using System.Threading;
+using Quark.Elasticsearch;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
-List<IQuarkTargetGroup> elasticSearchNodes = new()
-{
-    new QuarkTargetGroup("elasticnodes[00:03]", QuarkTargetTypes.Linux, tags: NodeTags.Primary),
-    new QuarkTargetGroup("elasticnodes[04:30]", QuarkTargetTypes.Linux, tags: NodeTags.Data | NodeTags.Ingest),
-};
+PackageDescription winDirStatPackage = new(
+    file: "windirstat1_1_2_setup.exe",
+    installedLocation: @"C:\Program Files (x86)\WinDirStat\windirstat.exe",
+    version: "1.1.2.80");
 
 var esConfig = new ElasticsearchConfiguration
 {
@@ -35,44 +36,45 @@ var esConfig = new ElasticsearchConfiguration
     }
 };
 
-var config = new QuarkConfigurationBuilder()
-    .WithQuarkFiles(@"C:\QuarkFiles\Elasticsearch\")
-    .WithTargets(elasticSearchNodes)
+Action<IQuarkTargetBuilder> esActions = builder =>
+{
+    builder.ManagePackage(winDirStatPackage, shouldExist: true)
     .WithElasticsearch(ElasticsearchVersion.v7_13_3)
     .WithElasticsearchConfiguration(
         remotePath: "/etc/elasticsearch/elasticsearch.yml",
         (quark, config) =>
         {
             config = esConfig;
-            config.Discovery.Zen.Ping.UnicastHosts = quark.Targets.WithTag(NodeTags.Primary);
+            config.Discovery.Zen.Ping.UnicastHosts = builder.TargetGroups.WithTag(NodeTags.Primary);
             config.GetNodeName(node => node.ToString());
         })
     .WithVariable("memory", "16g")
     .WithJinja2Template("jvm.options.j2", "/etc/elasticsearch/jvm.options")
     .WithJinja2Template("elasticsearch.service.j2", "/usr/lib/systemd/system/elasticsearch.service")
     .ConfigureService("elasticsearch.service", SystemdServiceOptions.DaemonReload | SystemdServiceOptions.Enabled);
+};
 
-var result = config
-    .ConfigureTelegraf(elasticSearchNodes)
-    .ConfigureSnmp(elasticSearchNodes)
-    .Build()
-    .Run(CancellationToken.None);
-
-PackageDescription winDirStatPackage = new(
-    file: "windirstat1_1_2_setup.exe",
-    installedLocation: @"C:\Program Files (x86)\WinDirStat\windirstat.exe");
+List<IQuarkTargetGroup> elasticSearchNodes = new()
+{
+    new QuarkTargetGroup("elasticnodes[00:03]", QuarkTargetTypes.Linux, esActions, tags: NodeTags.Primary),
+    new QuarkTargetGroup("elasticnodes[04:30]", QuarkTargetTypes.Linux, esActions, tags: NodeTags.Data | NodeTags.Ingest),
+};
 
 var configurationBuilder = new QuarkConfigurationBuilder()
     .WithQuarkFiles(path: @"C:\QuarkFiles")
-    .WithTarget(target: "localhost")
-    .ManagePackage(
-        file: "windirstat1_1_2_setup.exe",
-        installedLocation: @"C:\Program Files (x86)\WinDirStat\windirstat.exe",
-        shouldExist: true)
-    .ManagePackage(winDirStatPackage, shouldExist: false);
+    .ManagePackage(winDirStatPackage, shouldExist: false)
+    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, builder =>
+    {
+        builder.ManagePackage(winDirStatPackage, shouldExist: true);
+    },
+    tags: "blah")
+    .WithTargets(elasticSearchNodes, builder =>
+    {
+
+    });
 
 IQuarkConfiguration desiredConfiguration = configurationBuilder.Build();
 
-//QuarkResult result = await QuarkExecutor.RunAsync(desiredConfiguration, CancellationToken.None);
+QuarkResult result = await QuarkExecutor.RunAsync(desiredConfiguration, CancellationToken.None);
 
-return 0;// await desiredConfiguration.RunAsync();
+return 0;

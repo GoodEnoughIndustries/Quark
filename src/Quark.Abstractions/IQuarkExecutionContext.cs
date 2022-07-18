@@ -9,10 +9,10 @@ namespace Quark.Abstractions
     {
         IQuarkConfiguration Configuration { get; }
         List<IQuarkTarget> Targets { get; }
-        Task BuildTargetsAsync(CancellationToken token);
-        Task BuildTasksAsync(CancellationToken token);
         Task BuildResultsAsync(CancellationToken token);
         QuarkResult GetFinalResult();
-        IAsyncEnumerable<IQuarkTask> ExecuteTasksAsync(CancellationToken token);
+        Task ExecuteTasksAsync(CancellationToken token);
+        Task BuildAllAsync(CancellationToken token);
+        Task ValidateAsync(CancellationToken token);
     }
 }

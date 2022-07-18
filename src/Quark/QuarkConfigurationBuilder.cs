@@ -5,23 +5,22 @@ using System.IO;
 
 namespace Quark
 {
-    public class QuarkConfigurationBuilder
+    public class QuarkConfigurationBuilder : QuarkTargetBuilder
     {
-        public List<string> TargetNames { get; } = new List<string>();
-
         public List<DirectoryInfo> FileLocations { get; } = new List<DirectoryInfo>();
-        public List<IQuarkTask> QuarkTasks { get; } = new List<IQuarkTask>();
 
         public IQuarkConfiguration Build() => new QuarkConfiguration(this);
 
-        public QuarkConfigurationBuilder AddTarget(string target)
+        public QuarkConfigurationBuilder AddTargetGroups(IEnumerable<IQuarkTargetGroup> targetGroups)
         {
-            if (string.IsNullOrWhiteSpace(target))
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
+            this.TargetGroups.AddRange(targetGroups);
 
-            this.TargetNames.Add(target);
+            return this;
+        }
+
+        public QuarkConfigurationBuilder AddTargetGroup(IQuarkTargetGroup targetGroup)
+        {
+            this.TargetGroups.Add(targetGroup);
 
             return this;
         }
@@ -37,20 +36,5 @@ namespace Quark
 
             return this;
         }
-
-        public QuarkConfigurationBuilder AddQuarkTask(IQuarkTask task)
-        {
-            if (task is null)
-            {
-                throw new ArgumentNullException(nameof(task));
-            }
-
-            this.QuarkTasks.Add(task);
-
-            return this;
-        }
-
-        public QuarkConfigurationBuilder ConfigureTelegraf(List<IQuarkTargetGroup> elasticSearchNodes) => throw new NotImplementedException();
-        public QuarkConfigurationBuilder ConfigureSnmp(List<IQuarkTargetGroup> elasticSearchNodes) => throw new NotImplementedException();
     }
 }

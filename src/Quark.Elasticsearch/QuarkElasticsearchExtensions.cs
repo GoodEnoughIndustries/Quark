@@ -1,4 +1,4 @@
-﻿using Quark.Abstractions;
+using Quark.Abstractions;
 using System;
 
 namespace Quark.Elasticsearch
@@ -21,32 +21,21 @@ namespace Quark.Elasticsearch
 
     public static class QuarkElasticsearchExtensions
     {
-        public static QuarkConfigurationBuilder WithTargets(
-            this QuarkConfigurationBuilder builder,
-            string pattern,
-            NodeTags tags)
-            => throw new NotImplementedException();
-
-        public static QuarkConfigurationBuilder WithElasticsearch(
-            this QuarkConfigurationBuilder builder,
+        public static IQuarkTargetBuilder WithElasticsearch(
+            this IQuarkTargetBuilder builder,
             ElasticsearchVersion version)
         {
 
             return builder;
         }
 
-        public static QuarkConfigurationBuilder WithElasticsearchConfiguration(
-            this QuarkConfigurationBuilder builder,
+        public static IQuarkTargetBuilder WithElasticsearchConfiguration(
+            this IQuarkTargetBuilder builder,
             string remotePath,
             Action<QuarkConfiguration, ElasticsearchConfiguration> esConfig)
         {
 
             return builder;
-        }
-
-        public static IQuarkTargetGroup WithTag(this IQuarkTargetGroup targetGroup, NodeTags tags)
-        {
-            return targetGroup;
         }
     }
 }

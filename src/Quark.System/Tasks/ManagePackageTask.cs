@@ -1,8 +1,6 @@
-﻿using Quark.Abstractions;
+using Quark.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Quark.System.Tasks
@@ -17,14 +15,23 @@ namespace Quark.System.Tasks
             this.PackageDescription = packageDescription;
             this.ShouldExist = shouldExist;
         }
+
         public Task<QuarkResult> ExecuteAsync(IQuarkExecutionContext context, IQuarkTask target)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new QuarkResult
+            {
+
+            });
         }
 
         public Task<bool> ShouldRunAsync(IQuarkExecutionContext context, IQuarkTarget target)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
+        }
+
+        public Task BuildAsync(CancellationToken token)
+        {
+            return Task.CompletedTask;
         }
     }
 }

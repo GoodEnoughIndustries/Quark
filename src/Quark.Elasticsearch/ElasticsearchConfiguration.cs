@@ -1,11 +1,12 @@
-﻿using Quark.Abstractions;
+using Quark.Abstractions;
 using System;
+using System.Collections.Generic;
 
 namespace Quark.Elasticsearch
 {
     public class ElasticsearchConfiguration
     {
-        public string ClusterName { get; set; }
+        public string ClusterName { get; set; } = string.Empty;
         public IndexConfiguration Index { get; set; } = new();
         public bool BootstrapMemoryLock { get; set; } = false;
 
@@ -40,7 +41,7 @@ namespace Quark.Elasticsearch
 
                 public class PingConfiguration
                 {
-                    public IQuarkTargetGroup UnicastHosts { get; set; }
+                    public IEnumerable<IQuarkTargetGroup> UnicastHosts { get; set; }
                 }
             }
         }

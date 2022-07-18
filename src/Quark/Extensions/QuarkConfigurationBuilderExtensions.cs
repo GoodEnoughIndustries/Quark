@@ -2,9 +2,6 @@ using Quark.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quark
 {
@@ -12,37 +9,32 @@ namespace Quark
     {
         public static QuarkConfigurationBuilder WithTargets(
             this QuarkConfigurationBuilder builder,
-            IEnumerable<IQuarkTargetGroup> targets)
-            => throw new Exception();
+            IEnumerable<IQuarkTargetGroup> targets,
+            Action<IQuarkTargetBuilder> targetBuilder)
+            => WithTargets(builder, targets, targetBuilder, string.Empty);
 
         public static QuarkConfigurationBuilder WithTargets(
             this QuarkConfigurationBuilder builder,
-            string pattern,
+            IEnumerable<IQuarkTargetGroup> targets,
+            Action<IQuarkTargetBuilder> targetBuilder,
             params string[] tags)
-            => throw new Exception();
-
-        public static QuarkConfigurationBuilder WithTargets(
-            this QuarkConfigurationBuilder builder,
-            string filePath)
         {
-            if (builder is null)
+            foreach (var tg in targets)
             {
-                throw new ArgumentNullException(nameof(builder));
+                tg.WithTags(tags);
             }
 
-            if (string.IsNullOrEmpty(filePath))
-            {
-                throw new ArgumentException("message", nameof(filePath));
-            }
-
-            builder.AddTarget(filePath);
+            builder.AddTargetGroups(targets);
 
             return builder;
         }
 
         public static QuarkConfigurationBuilder WithTarget(
             this QuarkConfigurationBuilder builder,
-            string target)
+            string target,
+            QuarkTargetTypes targetType,
+            Action<IQuarkTargetBuilder> targetBuilder,
+            params object[] tags)
         {
             if (builder is null)
             {
@@ -54,14 +46,11 @@ namespace Quark
                 throw new ArgumentException("message", nameof(target));
             }
 
-            builder.AddTarget(target);
+            var tg = new QuarkTargetGroup(target, targetType, targetBuilder, tags);
+            builder.AddTargetGroup(tg);
 
             return builder;
         }
-
-        public static QuarkConfigurationBuilder WithVariable(this QuarkConfigurationBuilder builder, string key, string value) => builder;
-
-        public static QuarkConfigurationBuilder WithJinja2Template(this QuarkConfigurationBuilder builder, string localPath, string remotePath) => builder;
 
         public static QuarkConfigurationBuilder WithQuarkFiles(
             this QuarkConfigurationBuilder builder,
@@ -78,25 +67,6 @@ namespace Quark
             }
 
             builder.AddFileLocation(path);
-
-            return builder;
-        }
-
-        public static QuarkConfigurationBuilder WithTask(
-            this QuarkConfigurationBuilder builder,
-            IQuarkTask task)
-        {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            if (task is null)
-            {
-                throw new ArgumentNullException(nameof(task));
-            }
-
-            builder.AddQuarkTask(task);
 
             return builder;
         }

@@ -1,4 +1,4 @@
-﻿using Quark.Abstractions;
+using Quark.Abstractions;
 using Quark.System;
 using Quark.System.Tasks;
 
@@ -8,22 +8,16 @@ namespace Quark
     {
         public static QuarkConfigurationBuilder ManagePackage(
             this QuarkConfigurationBuilder builder,
-            string file,
-            string installedLocation,
-            string arguments = "",
+            IQuarkPackage package,
             bool shouldExist = true)
         {
-            return ManagePackage(
-                builder,
-                new PackageDescription(
-                    file,
-                    installedLocation,
-                    arguments),
-                shouldExist);
+            builder.AddQuarkTask(new ManagePackageTask(package, shouldExist));
+
+            return builder;
         }
 
-        public static QuarkConfigurationBuilder ManagePackage(
-            this QuarkConfigurationBuilder builder,
+        public static IQuarkTargetBuilder ManagePackage(
+            this IQuarkTargetBuilder builder,
             IQuarkPackage package,
             bool shouldExist = true)
         {
@@ -31,13 +25,12 @@ namespace Quark
             return builder;
         }
 
-        public static QuarkConfigurationBuilder ConfigureService(
-            this QuarkConfigurationBuilder builder,
+        public static IQuarkTargetBuilder ConfigureService(
+            this IQuarkTargetBuilder builder,
             string name,
             SystemdServiceOptions options)
         {
             return builder;
         }
-
     }
 }

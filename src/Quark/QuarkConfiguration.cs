@@ -3,16 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Quark
 {
     public class QuarkConfiguration : IQuarkConfiguration
     {
-        public List<string> TargetNames { get; } = new();
         public List<DirectoryInfo> FileLocations { get; } = new();
         public List<IQuarkTask> QuarkTasks { get; } = new();
-
-        public IQuarkTargetGroup Targets { get; } = new QuarkTargetGroup();
+        public List<IQuarkTargetGroup> TargetGroups { get; init; } = new List<IQuarkTargetGroup>();
 
         public QuarkConfiguration(QuarkConfigurationBuilder builder)
         {
@@ -21,11 +20,14 @@ namespace Quark
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            this.TargetNames = builder.TargetNames;
             this.FileLocations = builder.FileLocations;
             this.QuarkTasks = builder.QuarkTasks;
+            this.TargetGroups = builder.TargetGroups;
         }
 
-        public QuarkResult Run(CancellationToken token = default) => throw new NotImplementedException();
+        public QuarkResult Run(CancellationToken token)
+        {
+            return new QuarkResult();
+        }
     }
 }

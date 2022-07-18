@@ -1,12 +1,14 @@
 using Quark.Abstractions;
+using System.Collections.Generic;
 
 namespace Quark
 {
     public class QuarkTarget : IQuarkTarget
     {
-        public string Name { get; }
-        public QuarkTargetTypes Type { get; set; }
+        public string Name { get; init; } = string.Empty;
+        public QuarkTargetTypes Type { get; init; } = QuarkTargetTypes.Unknown;
+        public List<IQuarkTask> QuarkTasks { get; init; } = new();
 
-        public QuarkTarget(string name) => this.Name = name;
+        public override string ToString() => $"{this.Type}: {this.Name}";
     }
 }

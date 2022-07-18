@@ -10,19 +10,12 @@ namespace Quark
     {
         public async static Task<QuarkResult> RunAsync(IQuarkConfiguration configuration, CancellationToken token = default)
         {
-            if (configuration is null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            ArgumentNullException.ThrowIfNull(configuration);
 
             IQuarkExecutionContext context = new QuarkExecutionContext(configuration);
-            await context.BuildTargetsAsync(token).ConfigureAwait(false);
-            await context.BuildTasksAsync(token).ConfigureAwait(false);
-
-            await foreach(var task in context.ExecuteTasksAsync(token).ConfigureAwait(false))
-            {
-
-            }
+            await context.BuildAllAsync(token);
+            await context.ValidateAsync(token);
+            await context.ExecuteTasksAsync(token).ConfigureAwait(false);
 
             await context.BuildResultsAsync(token).ConfigureAwait(false);
 

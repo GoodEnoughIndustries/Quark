@@ -11,32 +11,50 @@ namespace Quark
 {
     public class QuarkExecutionContext : IQuarkExecutionContext
     {
-        public QuarkExecutionContext(IQuarkConfiguration configuration) => this.Configuration = configuration;
+        public QuarkExecutionContext(IQuarkConfiguration configuration)
+            => this.Configuration = configuration;
 
         public IQuarkConfiguration Configuration { get; }
         public List<IQuarkTarget> Targets { get; } = new();
 
-        public Task BuildResultsAsync(CancellationToken token) => throw new NotImplementedException();
+        public async Task BuildAllAsync(CancellationToken token)
+        {
+            // Copy all global tasks to each target group.
+            foreach (var targetGroup in this.Configuration.TargetGroups)
+            {
+                targetGroup.QuarkTasks.AddRange(this.Configuration.QuarkTasks);
+            }
 
-        public Task BuildTargetsAsync()
+            // Now we have each TargetGroup expand and do any prerun task stuff
+            var targetExpander = new QuarkTargetExpander();
+            foreach (var targetGroup in this.Configuration.TargetGroups)
+            {
+                await targetGroup.BuildTasksAsync(targetExpander);
+            }
+
+            // Now we load everything into this context.
+            // At this point, all Targets should be expanded and all
+            // appropriate tasks in each target
+
+        }
+
+        public Task BuildResultsAsync(CancellationToken token)
         {
             return Task.CompletedTask;
         }
 
-        public Task BuildTargetsAsync(CancellationToken token)
-            => throw new NotImplementedException();
-
-        public Task BuildTasksAsync()
+        public Task ExecuteTasksAsync(CancellationToken token)
         {
+            // execute every task in order, across all machines.
             return Task.CompletedTask;
         }
 
-        public Task BuildTasksAsync(CancellationToken token)
-            => throw new NotImplementedException();
+        public QuarkResult GetFinalResult() => new();
 
-        public IAsyncEnumerable<IQuarkTask> ExecuteTasksAsync(CancellationToken token)
-            => throw new NotImplementedException();
-
-        public QuarkResult GetFinalResult() => throw new NotImplementedException();
+        public Task ValidateAsync(CancellationToken token)
+        {
+            // validate things that need to be validated
+            return Task.CompletedTask;
+        }
     }
 }
