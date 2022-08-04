@@ -7,38 +7,37 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 
-namespace Quark.CLI
+namespace Quark.CLI;
+
+public partial class Program
 {
-    public partial class Program
+    private static Command CheckCommand()
     {
-        private static Command CheckCommand()
+        var checkCommand = new Command("check", "Starts a dry-run of specified runbook(s) against provided target(s).")
         {
-            var checkCommand = new Command("check", "Starts a dry-run of specified runbook(s) against provided target(s).")
-            {
-                TreatUnmatchedTokensAsErrors = true,
-                Handler = CommandHandler.Create<QuarkCLIOptions, InvocationContext, IConsole, IHost>(RunCheck),
-            };
+            TreatUnmatchedTokensAsErrors = true,
+            Handler = CommandHandler.Create<QuarkCLIOptions, InvocationContext, IConsole, IHost>(RunCheck),
+        };
 
-            checkCommand.Add(RunbookOption(required: true));
-            checkCommand.Add(TargetsOption(required: true));
-            checkCommand.Add(MetadataOption(required: false));
+        checkCommand.Add(RunbookOption(required: true));
+        checkCommand.Add(TargetsOption(required: true));
+        checkCommand.Add(MetadataOption(required: false));
 
-            return checkCommand;
-        }
+        return checkCommand;
+    }
 
-        private static Task<int> RunCheck(
-            QuarkCLIOptions options,
-            InvocationContext context,
-            IConsole console,
-            IHost host)
-        {
-            var serviceProvider = host.Services;
-            configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    private static Task<int> RunCheck(
+        QuarkCLIOptions options,
+        InvocationContext context,
+        IConsole console,
+        IHost host)
+    {
+        var serviceProvider = host.Services;
+        configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger(typeof(Program));
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger(typeof(Program));
 
-            return Task.FromResult(1);
-        }
+        return Task.FromResult(1);
     }
 }

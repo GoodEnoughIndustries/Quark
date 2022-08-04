@@ -1,6 +1,5 @@
-namespace Quark.Options
+namespace Quark.Options;
+
+public class MainOptionsValidator
 {
-    public class MainOptionsValidator
-    {
-    }
 }

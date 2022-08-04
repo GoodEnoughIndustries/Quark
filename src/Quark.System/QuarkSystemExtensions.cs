@@ -1,36 +1,37 @@
 using Quark.Abstractions;
-using Quark.System;
-using Quark.System.Tasks;
+using Quark.Systems;
+using Quark.Systems.Tasks;
 
-namespace Quark
+namespace Quark;
+
+public static class QuarkSystemExtensions
 {
-    public static class QuarkSystemExtensions
+    public static QuarkConfigurationBuilder ManagePackage(
+        this QuarkConfigurationBuilder builder,
+        IQuarkPackage package,
+        bool shouldExist = true)
     {
-        public static QuarkConfigurationBuilder ManagePackage(
-            this QuarkConfigurationBuilder builder,
-            IQuarkPackage package,
-            bool shouldExist = true)
-        {
-            builder.AddQuarkTask(new ManagePackageTask(package, shouldExist));
+        builder.AddQuarkTask((hostBuilder) => new ManagePackageTask(package, shouldExist));
 
-            return builder;
-        }
+        return builder;
+    }
 
-        public static IQuarkTargetBuilder ManagePackage(
-            this IQuarkTargetBuilder builder,
-            IQuarkPackage package,
-            bool shouldExist = true)
-        {
-            builder.AddQuarkTask(new ManagePackageTask(package, shouldExist));
-            return builder;
-        }
+    public static IQuarkTargetBuilder ManagePackage(
+        this IQuarkTargetBuilder builder,
+        IQuarkPackage package,
+        bool shouldExist = true)
+    {
+        builder.AddQuarkTask((hostBuilder) => new ManagePackageTask(package, shouldExist));
 
-        public static IQuarkTargetBuilder ConfigureService(
-            this IQuarkTargetBuilder builder,
-            string name,
-            SystemdServiceOptions options)
-        {
-            return builder;
-        }
+        return builder;
+    }
+
+    public static IQuarkTargetBuilder DownloadFile(
+        this IQuarkTargetBuilder builder,
+        string url,
+        string destination)
+    {
+        builder.AddQuarkTask((hostBuilder) => new DownloadTask(url, destination));
+        return builder;
     }
 }

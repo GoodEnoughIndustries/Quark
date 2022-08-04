@@ -1,9 +1,8 @@
-﻿namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public enum FileState
 {
-    public enum FileState
-    {
-        Unknown = 0,
-        Absent = 1,
-        Present = 2,
-    }
+    Unknown = 0,
+    Absent = 1,
+    Present = 2,
 }

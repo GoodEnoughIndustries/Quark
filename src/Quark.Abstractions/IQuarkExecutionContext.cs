@@ -1,18 +1,14 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public interface IQuarkExecutionContext
 {
-    public interface IQuarkExecutionContext
-    {
-        IQuarkConfiguration Configuration { get; }
-        List<IQuarkTarget> Targets { get; }
-        Task BuildResultsAsync(CancellationToken token);
-        QuarkResult GetFinalResult();
-        Task ExecuteTasksAsync(CancellationToken token);
-        Task BuildAllAsync(CancellationToken token);
-        Task ValidateAsync(CancellationToken token);
-    }
+    IQuarkConfiguration Configuration { get; }
+    List<IQuarkTarget> Targets { get; }
+    List<IQuarkResult> Results { get; }
+    Task ExecuteTasksAsync(QuarkContext context, CancellationToken token);
+    Task BuildAllAsync(QuarkContext context, CancellationToken token);
 }

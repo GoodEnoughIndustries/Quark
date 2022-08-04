@@ -8,7 +8,6 @@ namespace Quark.Tests
         [Fact]
         public void Test1()
         {
-
         }
     }
 }

@@ -1,13 +1,13 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public interface IQuarkTask
 {
-    public interface IQuarkTask
-    {
-        public string TaskName => this.GetType().Name;
-        Task<bool> ShouldRunAsync(IQuarkExecutionContext context, IQuarkTarget target);
-        Task<QuarkResult> ExecuteAsync(IQuarkExecutionContext context, IQuarkTask target);
-        Task BuildAsync(CancellationToken token);
-    }
+    public string TaskName => this.GetType().Name;
+    List<IQuarkTarget> Targets { get; init; }
+    Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTarget target);
+    Task BuildAsync(IQuarkExecutionContext context, CancellationToken token);
 }

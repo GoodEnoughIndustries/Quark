@@ -3,20 +3,29 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
+    <!--<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishTrimmed>true</PublishTrimmed>
+    <DebugType>embedded</DebugType>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>-->
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Program.oldcs" />
+    <Compile Remove="Program - Copy.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Program.oldcs" />
+    <None Include="Program - Copy.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Quark.Abstractions\Quark.Abstractions.csproj" />
     <ProjectReference Include="..\Quark.Elasticsearch\Quark.Elasticsearch.csproj" />
-    <ProjectReference Include="..\Quark.System\Quark.System.csproj" />
+    <ProjectReference Include="..\Quark.System\Quark.Systems.csproj" />
+    <ProjectReference Include="..\Quark.Windows\Quark.Windows.csproj" />
     <ProjectReference Include="..\Quark\Quark.csproj" />
   </ItemGroup>
 
@@ -26,6 +35,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Update="Microsoft.NetCore.Analyzers" Version="3.3.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

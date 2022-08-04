@@ -1,6 +1,5 @@
-namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public interface IQuarkVariable
 {
-    public interface IQuarkVariable
-    {
-    }
 }

@@ -1,6 +1,9 @@
-namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public interface IQuarkPackage
 {
-    public interface IQuarkPackage
-    {
-    }
+    string GetInstallerPath();
+    string GetArguments();
+    string GetVersion();
+    string GetInstalledPath();
 }

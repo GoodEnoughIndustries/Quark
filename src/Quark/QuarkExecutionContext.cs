@@ -1,60 +1,70 @@
 using Quark.Abstractions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quark
+namespace Quark;
+
+public class QuarkExecutionContext : IQuarkExecutionContext
 {
-    public class QuarkExecutionContext : IQuarkExecutionContext
+    public QuarkExecutionContext(IQuarkConfiguration configuration)
     {
-        public QuarkExecutionContext(IQuarkConfiguration configuration)
-            => this.Configuration = configuration;
+        this.Configuration = configuration;
+    }
 
-        public IQuarkConfiguration Configuration { get; }
-        public List<IQuarkTarget> Targets { get; } = new();
+    public QuarkContext? QuarkContext { get; set; }
+    public IQuarkConfiguration Configuration { get; }
+    public List<IQuarkTarget> Targets { get; } = new();
+    public List<IQuarkResult> Results { get; } = new();
+    public List<IQuarkTask> Tasks { get; } = new();
 
-        public async Task BuildAllAsync(CancellationToken token)
+    public async Task BuildAllAsync(QuarkContext context, CancellationToken token)
+    {
+        // Copy all global tasks to each target group.
+        foreach (var targetGroup in this.Configuration.TargetGroups)
         {
-            // Copy all global tasks to each target group.
-            foreach (var targetGroup in this.Configuration.TargetGroups)
+            targetGroup.QuarkTasks.AddRange(this.Configuration.QuarkTasks);
+        }
+
+        // Now we have each TargetGroup expand and do any prerun task stuff
+        var targetExpander = new QuarkTargetExpander();
+        foreach (var targetGroup in this.Configuration.TargetGroups)
+        {
+            await targetGroup.BuildTasksAsync(this, targetExpander, token);
+            context.CredentialProvider.AddCredentials(targetGroup.Credentials);
+        }
+
+        // Now we load everything into this context.
+        // At this point, all Targets should be expanded and all
+        // appropriate task in each target
+        foreach (var targetGroup in this.Configuration.TargetGroups)
+        {
+            this.Tasks.AddRange(targetGroup.QuarkTasks);
+            this.Targets.AddRange(targetGroup.Targets);
+        }
+    }
+
+    public async Task ExecuteTasksAsync(QuarkContext context, CancellationToken token)
+    {
+        foreach (var target in this.Targets)
+        {
+            if (target.Status.HasFlag(TargetStatus.Faulted))
             {
-                targetGroup.QuarkTasks.AddRange(this.Configuration.QuarkTasks);
+                continue;
             }
 
-            // Now we have each TargetGroup expand and do any prerun task stuff
-            var targetExpander = new QuarkTargetExpander();
-            foreach (var targetGroup in this.Configuration.TargetGroups)
+            foreach (var task in target.Tasks)
             {
-                await targetGroup.BuildTasksAsync(targetExpander);
+                var result = await task.ExecuteAsync(context, target);
+                this.Results.Add(result);
+
+                if (result.Result is RunResult.Fail)
+                {
+                    target.Status = TargetStatus.Faulted;
+                    break;
+                }
+
             }
-
-            // Now we load everything into this context.
-            // At this point, all Targets should be expanded and all
-            // appropriate tasks in each target
-
-        }
-
-        public Task BuildResultsAsync(CancellationToken token)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task ExecuteTasksAsync(CancellationToken token)
-        {
-            // execute every task in order, across all machines.
-            return Task.CompletedTask;
-        }
-
-        public QuarkResult GetFinalResult() => new();
-
-        public Task ValidateAsync(CancellationToken token)
-        {
-            // validate things that need to be validated
-            return Task.CompletedTask;
         }
     }
 }

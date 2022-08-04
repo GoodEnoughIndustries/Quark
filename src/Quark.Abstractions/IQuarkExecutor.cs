@@ -1,10 +1,10 @@
-﻿using System.Threading;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public interface IQuarkExecutor
 {
-    public interface IQuarkExecutor
-    {
-        // Task<QuarkResult> RunAsync(IQuarkConfiguration configuration, CancellationToken cancellationToken = default);
-    }
+    Task<QuarkResult> RunAsync(QuarkContext context, CancellationToken cancellationToken = default);
 }

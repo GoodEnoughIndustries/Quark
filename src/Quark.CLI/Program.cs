@@ -15,89 +15,88 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Quark.CLI
+namespace Quark.CLI;
+
+public partial class Program
 {
-    public partial class Program
+    private static IConfiguration configuration = new ConfigurationBuilder()
+        .Build();
+
+    public async static Task<int> Main(string[] args)
     {
-        private static IConfiguration configuration = new ConfigurationBuilder()
+        var rootCommand = GetRootCommand();
+
+        var parser = new CommandLineBuilder(rootCommand)
+            .UseQuarkCommandLineOptions()
+            .RegisterWithDotnetSuggest()
+            .UseExceptionHandler(HandleException)
+            .UseHost(CreateHostBuilder, host =>
+            {
+                host.ConfigureHostConfiguration(config =>
+                {
+                    configuration = AddConfigurationSources(args, config).Build();
+                });
+
+                host.ConfigureServices(ConfigureServices);
+            })
             .Build();
 
-        public async static Task<int> Main(string[] args)
+        var result = await parser
+            .InvokeAsync(args)
+            .ConfigureAwait(false);
+
+        return result;
+    }
+
+    private static IConfigurationBuilder AddConfigurationSources(string[] args, IConfigurationBuilder config)
+    {
+        config
+            .AddUserSecrets(typeof(Program).Assembly, optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .AddCommandLine(args);
+
+        return config;
+    }
+
+    private static Command GetRootCommand()
+    {
+        var root = new RootCommand
         {
-            var rootCommand = GetRootCommand();
+            Description = "Quark",
+             
+        };
 
-            var parser = new CommandLineBuilder(rootCommand)
-                .UseQuarkCommandLineOptions()
-                .RegisterWithDotnetSuggest()
-                .UseExceptionHandler(HandleException)
-                .UseHost(CreateHostBuilder, host =>
-                {
-                    host.ConfigureHostConfiguration(config =>
-                    {
-                        configuration = AddConfigurationSources(args, config).Build();
-                    });
+        root.Add(CheckCommand());
 
-                    host.ConfigureServices(ConfigureServices);
-                })
-                .Build();
+        return root;
+    }
 
-            var result = await parser
-                .InvokeAsync(args)
-                .ConfigureAwait(false);
+    private static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
+    {
+    }
 
-            return result;
+    public static IHostBuilder CreateHostBuilder(string[] args)
+        => Host.CreateDefaultBuilder(args)
+        .ConfigureHostConfiguration(builder =>
+        {
+        });
+
+    private static void HandleException(Exception exception, InvocationContext context)
+    {
+        if (exception is TargetInvocationException tie
+            && tie.InnerException is object)
+        {
+            exception = tie.InnerException;
         }
 
-        private static IConfigurationBuilder AddConfigurationSources(string[] args, IConfigurationBuilder config)
+        if (exception is OperationCanceledException)
         {
-            config
-                .AddUserSecrets(typeof(Program).Assembly, optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddCommandLine(args);
-
-            return config;
+            context.Console.Error.WriteLine("Operation canceled.");
         }
-
-        private static Command GetRootCommand()
+        else
         {
-            var root = new RootCommand
-            {
-                Description = "Quark",
-                 
-            };
-
-            root.Add(CheckCommand());
-
-            return root;
-        }
-
-        private static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
-        {
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args)
-            => Host.CreateDefaultBuilder(args)
-            .ConfigureHostConfiguration(builder =>
-            {
-            });
-
-        private static void HandleException(Exception exception, InvocationContext context)
-        {
-            if (exception is TargetInvocationException tie
-                && tie.InnerException is object)
-            {
-                exception = tie.InnerException;
-            }
-
-            if (exception is OperationCanceledException)
-            {
-                context.Console.Error.WriteLine("Operation canceled.");
-            }
-            else
-            {
-                context.Console.Error.WriteLine("An unhandled exception has occurred, how unseemly: ");
-                context.Console.Error.WriteLine(exception.ToString());
-            }
+            context.Console.Error.WriteLine("An unhandled exception has occurred, how unseemly: ");
+            context.Console.Error.WriteLine(exception.ToString());
         }
     }
 }

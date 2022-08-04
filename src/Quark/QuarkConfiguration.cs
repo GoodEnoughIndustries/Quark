@@ -2,32 +2,26 @@ using Quark.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Quark
+namespace Quark;
+
+public class QuarkConfiguration : IQuarkConfiguration
 {
-    public class QuarkConfiguration : IQuarkConfiguration
+    public QuarkConfiguration(QuarkConfigurationBuilder builder)
     {
-        public List<DirectoryInfo> FileLocations { get; } = new();
-        public List<IQuarkTask> QuarkTasks { get; } = new();
-        public List<IQuarkTargetGroup> TargetGroups { get; init; } = new List<IQuarkTargetGroup>();
+        ArgumentNullException.ThrowIfNull(builder);
 
-        public QuarkConfiguration(QuarkConfigurationBuilder builder)
-        {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
+        this.FileLocations = builder.FileLocations;
+        this.QuarkTasks = builder.QuarkTasks;
+        this.TargetGroups = builder.TargetGroups;
+    }
 
-            this.FileLocations = builder.FileLocations;
-            this.QuarkTasks = builder.QuarkTasks;
-            this.TargetGroups = builder.TargetGroups;
-        }
+    public List<DirectoryInfo> FileLocations { get; } = new();
+    public List<IQuarkTask> QuarkTasks { get; } = new();
+    public List<IQuarkTargetGroup> TargetGroups { get; init; } = new List<IQuarkTargetGroup>();
 
-        public QuarkResult Run(CancellationToken token)
-        {
-            return new QuarkResult();
-        }
+    public IQuarkConfiguration Build()
+    {
+        return this;
     }
 }

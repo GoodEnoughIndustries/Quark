@@ -5,18 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Quark.CLI
+namespace Quark.CLI;
+
+public class QuarkCLIOptions
 {
-    public class QuarkCLIOptions
+    public QuarkCLIOptions()
     {
-        public QuarkCLIOptions()
-        {
 
-        }
-
-        public IEnumerable<QuarkMetadata> Metadata { get; set; } = new List<QuarkMetadata>();
-        public IEnumerable<QuarkRunbook> Runbooks { get; set; } = new List<QuarkRunbook>();
-
-        public IEnumerable<QuarkTarget> Targets { get; set; } = new List<QuarkTarget>();
     }
+
+    public IEnumerable<QuarkMetadata> Metadata { get; set; } = new List<QuarkMetadata>();
+    public IEnumerable<QuarkRunbook> Runbooks { get; set; } = new List<QuarkRunbook>();
+
+    public IEnumerable<QuarkTarget> Targets { get; set; } = new List<QuarkTarget>();
 }

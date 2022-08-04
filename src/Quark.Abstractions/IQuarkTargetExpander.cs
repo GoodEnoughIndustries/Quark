@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 
-namespace Quark.Abstractions
+namespace Quark.Abstractions;
+
+public interface IQuarkTargetExpander
 {
-    public interface IQuarkTargetExpander
-    {
-        bool TryExpand(IQuarkTargetGroup targetGroup, out IEnumerable<IQuarkTarget> targets);
-    }
+    bool TryExpand(IQuarkTargetGroup targetGroup, out IEnumerable<IQuarkTarget> targets);
 }

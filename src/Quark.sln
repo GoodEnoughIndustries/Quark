@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.CLI.Tests", "Tests\Qu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.Abstractions", "Quark.Abstractions\Quark.Abstractions.csproj", "{123FC569-0979-46EF-9FE3-6F1A5C0CC4C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.System", "Quark.System\Quark.System.csproj", "{D2BB91E1-B8B0-4066-859D-13E0E9EAEEE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.Systems", "Quark.System\Quark.Systems.csproj", "{D2BB91E1-B8B0-4066-859D-13E0E9EAEEE0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{9C80D3EF-B29A-4B84-B36B-490AC191D4B3}"
 EndProject
@@ -29,6 +29,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\NuGet.Config = ..\NuGet.Config
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quark.Windows", "Quark.Windows\Quark.Windows.csproj", "{AD573365-9826-480C-8CE1-95ADD20E8879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quark.Linux", "Quark.Linux\Quark.Linux.csproj", "{DD149A7C-187A-4055-9A20-A5E7A24CCCA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -68,6 +72,14 @@ Global
 		{135C3C5C-2561-4DAA-8BB9-DF0CE72673E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{135C3C5C-2561-4DAA-8BB9-DF0CE72673E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{135C3C5C-2561-4DAA-8BB9-DF0CE72673E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD573365-9826-480C-8CE1-95ADD20E8879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD573365-9826-480C-8CE1-95ADD20E8879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD573365-9826-480C-8CE1-95ADD20E8879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD573365-9826-480C-8CE1-95ADD20E8879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD149A7C-187A-4055-9A20-A5E7A24CCCA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD149A7C-187A-4055-9A20-A5E7A24CCCA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD149A7C-187A-4055-9A20-A5E7A24CCCA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD149A7C-187A-4055-9A20-A5E7A24CCCA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

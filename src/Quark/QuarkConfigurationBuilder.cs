@@ -3,38 +3,42 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Quark
+namespace Quark;
+
+public class QuarkConfigurationBuilder : QuarkTargetBuilder
 {
-    public class QuarkConfigurationBuilder : QuarkTargetBuilder
+    public List<DirectoryInfo> FileLocations { get; } = new();
+
+    public IQuarkConfiguration Build()
     {
-        public List<DirectoryInfo> FileLocations { get; } = new List<DirectoryInfo>();
+        var config = new QuarkConfiguration(this);
+        config.Build();
 
-        public IQuarkConfiguration Build() => new QuarkConfiguration(this);
+        return config;
+    }
+    public QuarkConfigurationBuilder AddTargetGroups(IEnumerable<IQuarkTargetGroup> targetGroups)
+    {
+        this.TargetGroups.AddRange(targetGroups);
 
-        public QuarkConfigurationBuilder AddTargetGroups(IEnumerable<IQuarkTargetGroup> targetGroups)
+        return this;
+    }
+
+    public QuarkConfigurationBuilder AddTargetGroup(IQuarkTargetGroup targetGroup)
+    {
+        this.TargetGroups.Add(targetGroup);
+
+        return this;
+    }
+
+    public QuarkConfigurationBuilder AddFileLocation(string folderPath)
+    {
+        if (string.IsNullOrWhiteSpace(folderPath))
         {
-            this.TargetGroups.AddRange(targetGroups);
-
-            return this;
+            throw new ArgumentNullException(nameof(folderPath));
         }
 
-        public QuarkConfigurationBuilder AddTargetGroup(IQuarkTargetGroup targetGroup)
-        {
-            this.TargetGroups.Add(targetGroup);
+        this.FileLocations.Add(new DirectoryInfo(folderPath));
 
-            return this;
-        }
-
-        public QuarkConfigurationBuilder AddFileLocation(string folderPath)
-        {
-            if (string.IsNullOrWhiteSpace(folderPath))
-            {
-                throw new ArgumentNullException(nameof(folderPath));
-            }
-
-            this.FileLocations.Add(new DirectoryInfo(folderPath));
-
-            return this;
-        }
+        return this;
     }
 }

@@ -2,54 +2,53 @@ using Quark.Abstractions;
 using System;
 using System.Collections.Generic;
 
-namespace Quark.Elasticsearch
+namespace Quark.Elasticsearch;
+
+public class ElasticsearchConfiguration
 {
-    public class ElasticsearchConfiguration
+    public string ClusterName { get; set; } = string.Empty;
+    public IndexConfiguration Index { get; set; } = new();
+    public bool BootstrapMemoryLock { get; set; } = false;
+
+    public DiscoveryConfiguration Discovery { get; set; } = new();
+
+    public PathConfiguration Path { get; set; } = new();
+
+    public ElasticsearchConfiguration SetClusterName(string name)
     {
-        public string ClusterName { get; set; } = string.Empty;
-        public IndexConfiguration Index { get; set; } = new();
-        public bool BootstrapMemoryLock { get; set; } = false;
+        return this;
+    }
 
-        public DiscoveryConfiguration Discovery { get; set; } = new();
+    public ElasticsearchConfiguration GetNodeName(Func<string, string> nodeName)
+    {
+        return this;
+    }
 
-        public PathConfiguration Path { get; set; } = new();
+    public record PathConfiguration()
+    {
+        public string Data;
+        public string Logs;
+    }
 
-        public ElasticsearchConfiguration SetClusterName(string name)
+    public class DiscoveryConfiguration
+    {
+        public ZenConfiguration Zen { get; set; } = new();
+        public class ZenConfiguration
         {
-            return this;
-        }
+            public int MinimumPrimaryNodes { get; set; } = 2;
 
-        public ElasticsearchConfiguration GetNodeName(Func<string, string> nodeName)
-        {
-            return this;
-        }
+            public PingConfiguration Ping { get; set; } = new();
 
-        public record PathConfiguration()
-        {
-            public string Data;
-            public string Logs;
-        }
-
-        public class DiscoveryConfiguration
-        {
-            public ZenConfiguration Zen { get; set; } = new();
-            public class ZenConfiguration
+            public class PingConfiguration
             {
-                public int MinimumPrimaryNodes { get; set; } = 2;
-
-                public PingConfiguration Ping { get; set; } = new();
-
-                public class PingConfiguration
-                {
-                    public IEnumerable<IQuarkTargetGroup> UnicastHosts { get; set; }
-                }
+                public IEnumerable<IQuarkTargetGroup> UnicastHosts { get; set; }
             }
         }
     }
+}
 
-    public class IndexConfiguration
-    {
-        public int NumberOfShards { get; set; } = 1;
-        public int NumberOfReplicas { get; set; } = 1;
-    }
+public class IndexConfiguration
+{
+    public int NumberOfShards { get; set; } = 1;
+    public int NumberOfReplicas { get; set; } = 1;
 }

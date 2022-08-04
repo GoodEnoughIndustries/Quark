@@ -1,12 +1,11 @@
 using Quark.Abstractions;
 
-namespace Quark
-{
-    public class QuarkRunbook : IQuarkRunbook
-    {
-        public QuarkRunbook(string runbook)
-            => this.Runbook = runbook;
+namespace Quark;
 
-        public string Runbook { get; }
-    }
+public class QuarkRunbook : IQuarkRunbook
+{
+    public QuarkRunbook(string runbook)
+        => this.Runbook = runbook;
+
+    public string Runbook { get; }
 }

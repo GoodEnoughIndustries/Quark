@@ -1,25 +1,28 @@
+using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quark
+namespace Quark;
+
+public class QuarkExecutor : IQuarkExecutor
 {
-    public class QuarkExecutor : IQuarkExecutor
+    public async Task<QuarkResult> RunAsync(QuarkContext context, CancellationToken token)
     {
-        public async static Task<QuarkResult> RunAsync(IQuarkConfiguration configuration, CancellationToken token = default)
+        ArgumentNullException.ThrowIfNull(context);
+
+        foreach (var configuration in context.Configurations)
         {
-            ArgumentNullException.ThrowIfNull(configuration);
-
-            IQuarkExecutionContext context = new QuarkExecutionContext(configuration);
-            await context.BuildAllAsync(token);
-            await context.ValidateAsync(token);
-            await context.ExecuteTasksAsync(token).ConfigureAwait(false);
-
-            await context.BuildResultsAsync(token).ConfigureAwait(false);
-
-            return context.GetFinalResult();
+            // TODO: inject executioncontexts
+            IQuarkExecutionContext executionContext = new QuarkExecutionContext(configuration);
+            await executionContext.BuildAllAsync(context, token);
+            await executionContext.ExecuteTasksAsync(context, token).ConfigureAwait(false);
         }
+
+        return new QuarkResult
+        {
+
+        };
     }
 }

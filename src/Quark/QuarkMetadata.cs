@@ -1,13 +1,7 @@
 using Quark.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Quark
+namespace Quark;
+
+public class QuarkMetadata : IQuarkMetadata
 {
-    public class QuarkMetadata : IQuarkMetadata
-    {
-    }
 }
