@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Quark;
 using Quark.Abstractions;
-using Serilog;
-using Serilog.Events;
 using TestApp;
 
 var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "password");
@@ -10,20 +8,20 @@ var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "pas
 var configuration = new QuarkConfigurationBuilder()
     .WithQuarkFiles(path: @"C:\QuarkFiles")
     .ManagePackage(Packages.WinDirStat, shouldExist: false)
-    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, builder =>
+    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, async (context, manager, target) =>
     {
-        builder.ElevateAs(adminCredential);
-        builder.ManagePackage(Packages.WinDirStat, shouldExist: true);
-        builder.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
+        manager.ElevateAs(adminCredential);
+
+        manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
+        await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
     })
     .Build();
 
-var runnerBuilder = new QuarkRunnerBuilder(args)
+var runner = new QuarkRunnerBuilder(args)
     .ManageWindows()
     .ManageSystems()
-    .AddQuarkConfiguration(configuration);
-
-var runner = runnerBuilder.Build();
+    .AddQuarkConfiguration(configuration)
+    .Build();
 
 await runner.RunAsync();
 

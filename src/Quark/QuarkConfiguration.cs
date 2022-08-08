@@ -14,8 +14,10 @@ public class QuarkConfiguration : IQuarkConfiguration
         this.FileLocations = builder.FileLocations;
         this.QuarkTasks = builder.QuarkTasks;
         this.TargetGroups = builder.TargetGroups;
+        this.GlobalManageActions = builder.DeferredActions;
     }
 
+    public List<ExecutingRunnerAsync> GlobalManageActions { get; } = new();
     public List<DirectoryInfo> FileLocations { get; } = new();
     public List<IQuarkTask> QuarkTasks { get; } = new();
     public List<IQuarkTargetGroup> TargetGroups { get; init; } = new List<IQuarkTargetGroup>();

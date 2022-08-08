@@ -1,6 +1,7 @@
 using Quark.Abstractions;
 using Quark.Systems;
 using Quark.Systems.Tasks;
+using System.Threading.Tasks;
 
 namespace Quark;
 
@@ -11,27 +12,32 @@ public static class QuarkSystemExtensions
         IQuarkPackage package,
         bool shouldExist = true)
     {
-        builder.AddQuarkTask((hostBuilder) => new ManagePackageTask(package, shouldExist));
+        var manager = (IQuarkTargetManager)builder;
+
+        manager.RunQuarkTask((context, manager, target)
+            => new ManagePackageTask(package, shouldExist)
+            .ExecuteAsync(context, target));
 
         return builder;
     }
 
-    public static IQuarkTargetBuilder ManagePackage(
-        this IQuarkTargetBuilder builder,
+    public static IQuarkTargetManager ManagePackage(
+        this IQuarkTargetManager manager,
         IQuarkPackage package,
         bool shouldExist = true)
     {
-        builder.AddQuarkTask((hostBuilder) => new ManagePackageTask(package, shouldExist));
+        manager.RunQuarkTask((context, manager, target)
+            => new ManagePackageTask(package, shouldExist)
+            .ExecuteAsync(context, target));
 
-        return builder;
+        return manager;
     }
 
-    public static IQuarkTargetBuilder DownloadFile(
-        this IQuarkTargetBuilder builder,
+    public static async Task<IQuarkTargetManager> DownloadFile(
+        this IQuarkTargetManager manager,
         string url,
         string destination)
-    {
-        builder.AddQuarkTask((hostBuilder) => new DownloadTask(url, destination));
-        return builder;
-    }
+    => await manager.RunQuarkTask((context, manager, target)
+            => new DownloadTask(url, destination)
+            .ExecuteAsync(context, target));
 }

@@ -15,9 +15,9 @@ public class QuarkExecutor : IQuarkExecutor
         foreach (var configuration in context.Configurations)
         {
             // TODO: inject executioncontexts
-            IQuarkExecutionContext executionContext = new QuarkExecutionContext(configuration);
-            await executionContext.BuildAllAsync(context, token);
-            await executionContext.ExecuteTasksAsync(context, token).ConfigureAwait(false);
+            //IQuarkExecutionContext executionContext = new QuarkExecutionContext(configuration);
+            //await executionContext.BuildAllAsync(context, token);
+            //await executionContext.ExecuteTasksAsync(context, token).ConfigureAwait(false);
         }
 
         return new QuarkResult

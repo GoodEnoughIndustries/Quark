@@ -2,29 +2,41 @@ using Microsoft.Extensions.Hosting;
 using Quark.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Quark;
 
-public class QuarkTargetBuilder : IQuarkTargetBuilder
+public class QuarkTargetRunner : IQuarkTargetManager
 {
+    public QuarkTargetRunner()
+    {
+    }
+
+    public QuarkTargetRunner(QuarkContext context, IQuarkTarget target)
+    {
+        this.Context = context;
+        this.Target = target;
+    }
+
+    public QuarkContext? Context { get; }
+    public IQuarkTarget? Target { get; }
+
     public List<IQuarkTask> QuarkTasks { get; } = new();
     public List<IQuarkTargetGroup> TargetGroups { get; } = new();
     public List<IQuarkCredential> Credentials { get; } = new();
 
-    public List<Func<IHostBuilder, IQuarkTask>> BuildActions { get; } = new();
+    public List<ExecutingRunnerAsync> DeferredActions { get; } = new();
 
-    public IQuarkTargetBuilder AddQuarkTask(Func<IHostBuilder, IQuarkTask> taskRun)
+    public async Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
     {
-        this.BuildActions.Add(taskRun);
-
-        return this;
-    }
-
-    public IQuarkTargetBuilder AddQuarkTask2(IQuarkTask task)
-    {
-        ArgumentNullException.ThrowIfNull(task);
-
-        this.QuarkTasks.Add(task);
+        if (this.Context is not null && this.Target is not null)
+        {
+            await taskRun(this.Context, this, this.Target);
+        }
+        else
+        {
+            this.DeferredActions.Add(taskRun);
+        }
 
         return this;
     }

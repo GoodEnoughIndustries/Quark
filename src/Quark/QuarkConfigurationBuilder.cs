@@ -5,8 +5,18 @@ using System.IO;
 
 namespace Quark;
 
-public class QuarkConfigurationBuilder : QuarkTargetBuilder
+public class QuarkConfigurationBuilder : QuarkTargetRunner
 {
+    public QuarkConfigurationBuilder()
+        :base()
+    {
+    }
+
+    public QuarkConfigurationBuilder(QuarkContext context, IQuarkTarget target)
+        : base(context, target)
+    {
+    }
+
     public List<DirectoryInfo> FileLocations { get; } = new();
 
     public IQuarkConfiguration Build()

@@ -33,20 +33,17 @@ public static class QuarkConfigurationBuilderExtensions
         this QuarkConfigurationBuilder builder,
         string target,
         QuarkTargetTypes targetType,
-        Action<IQuarkTargetBuilder> targetBuilder,
+        ExecutingRunnerAsync targetManager,
         params object[] tags)
     {
-        if (builder is null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         if (string.IsNullOrWhiteSpace(target))
         {
             throw new ArgumentException("message", nameof(target));
         }
 
-        var tg = new QuarkTargetGroup(target, targetType, targetBuilder, tags);
+        var tg = new QuarkTargetGroup(target, targetType, targetManager, tags);
         builder.AddTargetGroup(tg);
 
         return builder;
@@ -56,10 +53,7 @@ public static class QuarkConfigurationBuilderExtensions
         this QuarkConfigurationBuilder builder,
         string path)
     {
-        if (builder is null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        ArgumentNullException.ThrowIfNull(builder);
 
         if (string.IsNullOrWhiteSpace(path))
         {

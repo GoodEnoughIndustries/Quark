@@ -12,7 +12,6 @@ namespace Quark;
 public class QuarkRunnerBuilder : IHostBuilder
 {
     private readonly IHostBuilder hostBuilder;
-    private List<Func<IHostBuilder, IQuarkTask>> deferredBuildActions = new();
 
     public QuarkRunnerBuilder(string[] args)
     {
@@ -36,30 +35,19 @@ public class QuarkRunnerBuilder : IHostBuilder
 
     public IHost Build()
     {
-        var targetExpander = new QuarkTargetExpander();
-
         foreach (var configuration in this.configurations)
         {
             foreach (var targetGroup in configuration.TargetGroups)
             {
-                targetGroup.BuildTasks(this);
+                targetGroup.BuildTargets(this);
             }
         }
 
-
         var host = this.hostBuilder.Build();
 
-        var context = host.Services.GetRequiredService<QuarkContext>();
-
-        foreach (var configuration in context.Configurations)
-        {
-//            configuration.TargetGroups.ForEach(tg => tg.)
-        }
-
-        //IQuarkExecutionContext executionContext = new QuarkExecutionContext(configuration);
-        //executionContext.BuildAllAsync(context, default);
-
-        Console.WriteLine("Building");
+        // Force and exception here in case something is misconfigured
+        // or missing in the DI container...
+        host.Services.GetRequiredService<QuarkContext>();
 
         return host;
     }

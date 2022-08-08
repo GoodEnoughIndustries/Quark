@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,40 +9,54 @@ namespace Quark;
 
 public class QuarkExecutionContext : IQuarkExecutionContext
 {
-    public QuarkExecutionContext(IQuarkConfiguration configuration)
+    private readonly ILogger<QuarkExecutionContext> logger;
+
+    public QuarkExecutionContext(ILogger<QuarkExecutionContext> logger)
     {
-        this.Configuration = configuration;
+        this.logger = logger;
     }
 
-    public QuarkContext? QuarkContext { get; set; }
-    public IQuarkConfiguration Configuration { get; }
+    public IQuarkConfiguration? CurrentConfiguration { get; private set; }
     public List<IQuarkTarget> Targets { get; } = new();
     public List<IQuarkResult> Results { get; } = new();
     public List<IQuarkTask> Tasks { get; } = new();
 
     public async Task BuildAllAsync(QuarkContext context, CancellationToken token)
     {
-        // Copy all global tasks to each target group.
-        foreach (var targetGroup in this.Configuration.TargetGroups)
+        if (this.CurrentConfiguration is null)
         {
-            targetGroup.QuarkTasks.AddRange(this.Configuration.QuarkTasks);
+            this.CurrentConfiguration = context.Configurations.First();
         }
 
-        // Now we have each TargetGroup expand and do any prerun task stuff
-        var targetExpander = new QuarkTargetExpander();
-        foreach (var targetGroup in this.Configuration.TargetGroups)
+        foreach (var configuration in context.Configurations)
         {
-            await targetGroup.BuildTasksAsync(this, targetExpander, token);
-            context.CredentialProvider.AddCredentials(targetGroup.Credentials);
-        }
+            // Copy all global tasks to each target group.
+            foreach (var targetGroup in configuration.TargetGroups)
+            {
+                targetGroup.QuarkTasks.AddRange(configuration.QuarkTasks);
+                targetGroup.ManageActions.AddRange(configuration.GlobalManageActions);
+                targetGroup.ManageActions.Add(targetGroup.Manager);
+            }
 
-        // Now we load everything into this context.
-        // At this point, all Targets should be expanded and all
-        // appropriate task in each target
-        foreach (var targetGroup in this.Configuration.TargetGroups)
-        {
-            this.Tasks.AddRange(targetGroup.QuarkTasks);
-            this.Targets.AddRange(targetGroup.Targets);
+            // Now we have each TargetGroup expand and do any prerun task stuff
+            var targetExpander = new QuarkTargetExpander();
+            foreach (var targetGroup in configuration.TargetGroups)
+            {
+                //await targetGroup.BuildTasksAsync(this, targetExpander, token);
+                context.CredentialProvider.AddCredentials(targetGroup.Credentials);
+            }
+
+            // Now we load everything into this context.
+            // At this point, all Targets should be expanded and all
+            // appropriate task in each target
+            foreach (var targetGroup in configuration.TargetGroups)
+            {
+                targetGroup.Targets.ForEach(tg => tg.ManageActions.AddRange(configuration.GlobalManageActions));
+                targetGroup.Targets.ForEach(tg => tg.ManageActions.AddRange(targetGroup.ManageActions));
+
+                this.Tasks.AddRange(targetGroup.QuarkTasks);
+                this.Targets.AddRange(targetGroup.Targets);
+            }
         }
     }
 
@@ -53,17 +69,10 @@ public class QuarkExecutionContext : IQuarkExecutionContext
                 continue;
             }
 
-            foreach (var task in target.Tasks)
+            foreach (var manageAction in target.ManageActions)
             {
-                var result = await task.ExecuteAsync(context, target);
-                this.Results.Add(result);
-
-                if (result.Result is RunResult.Fail)
-                {
-                    target.Status = TargetStatus.Faulted;
-                    break;
-                }
-
+                var tm = new QuarkTargetRunner(context, target);
+                await manageAction(context, tm, target);
             }
         }
     }

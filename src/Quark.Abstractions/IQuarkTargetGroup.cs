@@ -13,10 +13,11 @@ public interface IQuarkTargetGroup
     QuarkTargetTypes Type { get; }
     string Pattern { get; }
     List<IQuarkTarget> Targets { get; set; }
-    void BuildTasks(IHostBuilder hostBuilder);
-    Task BuildTasksAsync(IQuarkExecutionContext context, IQuarkTargetExpander expander, CancellationToken token);
-    Action<IQuarkTargetBuilder> Builder { get; }
+    void BuildTargets(IHostBuilder hostBuilder);
+    //Task BuildTasksAsync(IQuarkExecutionContext context, IQuarkTargetExpander expander, CancellationToken token);
+    //Action<IQuarkTargetManager> Manager { get; }
+    ExecutingRunnerAsync Manager { get; }
     List<IQuarkTask> QuarkTasks { get; }
     List<IQuarkCredential> Credentials { get; }
-    List<Func<IHostBuilder, IQuarkTask>> BuildActions { get; }
+    List<ExecutingRunnerAsync> ManageActions { get; }
 }

@@ -10,6 +10,7 @@ namespace Quark;
 public class QuarkFileSystem : IQuarkFileSystem
 {
     private readonly ILogger<QuarkFileSystem> logger;
+    private string tempPath;
 
     public QuarkFileSystem(
         ILogger<QuarkFileSystem> logger,
@@ -17,6 +18,9 @@ public class QuarkFileSystem : IQuarkFileSystem
     {
         this.logger = logger;
         this.FileProviders = fileProviders;
+
+        this.tempPath = Path.GetTempPath();
+        Directory.CreateDirectory(tempPath);
     }
 
     public IEnumerable<IQuarkFileProvider> FileProviders { get; init; }
@@ -32,4 +36,7 @@ public class QuarkFileSystem : IQuarkFileSystem
 
         return Task.FromResult((FileInfo?)null);
     }
+
+    public string GetTemporaryDirectory()
+        => this.tempPath;
 }

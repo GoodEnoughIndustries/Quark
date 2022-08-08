@@ -43,6 +43,7 @@ public class QuarkContext
     public IQuarkFileSystem FileSystem { get; init; }
     public IQuarkExecutor Executor { get; init; }
     public Task ExecutingTask { get; set; }
+    public List<IQuarkTask> ManagementTasks { get; set; } = new();
 
     public ILogger<TCategory> GetLogger<TCategory>()
         => this.loggerFactory.CreateLogger<TCategory>();

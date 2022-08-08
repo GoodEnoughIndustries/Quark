@@ -5,6 +5,7 @@ namespace Quark.Abstractions;
 
 public interface IQuarkTarget
 {
+    public List<ExecutingRunnerAsync> ManageActions { get; set; }
     public QuarkTargetTypes Type { get; init; }
     public string Name { get; init; }
     public List<IQuarkTask> Tasks { get; init; }

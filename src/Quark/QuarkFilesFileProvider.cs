@@ -26,7 +26,7 @@ public class QuarkFilesFileProvider : IQuarkFileProvider
         // Go through all the Directories Operator provided that should
         // hold files for the run.
 
-        foreach (var dir in this.context.Configuration.FileLocations)
+        foreach (var dir in this.context.CurrentConfiguration.FileLocations)
         {
             var potentialPath = Path.Combine(dir.FullName, path);
 
@@ -45,7 +45,7 @@ public class QuarkFilesFileProvider : IQuarkFileProvider
         // Go through all the Directories Operator provided that should
         // hold files for the run.
 
-        foreach (var dir in this.context.Configuration.FileLocations)
+        foreach (var dir in this.context.CurrentConfiguration.FileLocations)
         {
             var potentialPath = Path.Combine(dir.FullName, path);
 
