@@ -162,11 +162,4 @@ public class ManagePackageTask : IQuarkTask
 
         return QuarkResult.GetResult(RunResult.Success, target, this);
     }
-
-    public Task BuildAsync(IQuarkExecutionContext context, CancellationToken token)
-    {
-        // verify files are there?
-        // What if a task actually adds a file?
-        return Task.CompletedTask;
-    }
 }

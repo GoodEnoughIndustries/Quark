@@ -1,5 +1,6 @@
 using Quark.Abstractions;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,13 +19,9 @@ namespace Quark.Systems
 
         public List<IQuarkTarget> Targets { get; init; } = new();
 
-        public Task BuildAsync(IQuarkExecutionContext context, CancellationToken token)
-        {
-            return Task.CompletedTask;
-        }
-
         public Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTarget target)
         {
+            var dirName = Path.GetDirectoryName(this.destination);
             return Task.FromResult((IQuarkResult)QuarkResult.GetResult(RunResult.NotImplemented, target, this));
         }
     }

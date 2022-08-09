@@ -33,11 +33,11 @@ public static class QuarkSystemExtensions
         return manager;
     }
 
-    public static async Task<IQuarkTargetManager> DownloadFile(
+    public static Task<IQuarkTargetManager> DownloadFile(
         this IQuarkTargetManager manager,
         string url,
         string destination)
-    => await manager.RunQuarkTask((context, manager, target)
+    => manager.RunQuarkTask((context, manager, target)
             => new DownloadTask(url, destination)
             .ExecuteAsync(context, target));
 }

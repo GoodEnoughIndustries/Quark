@@ -12,7 +12,7 @@ public class QuarkExecutor : IQuarkExecutor
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        foreach (var configuration in context.Configurations)
+        foreach (var configuration in context.QuarkConfigurations)
         {
             // TODO: inject executioncontexts
             //IQuarkExecutionContext executionContext = new QuarkExecutionContext(configuration);

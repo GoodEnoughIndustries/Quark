@@ -25,10 +25,10 @@ public class QuarkExecutionContext : IQuarkExecutionContext
     {
         if (this.CurrentConfiguration is null)
         {
-            this.CurrentConfiguration = context.Configurations.First();
+            this.CurrentConfiguration = context.QuarkConfigurations.First();
         }
 
-        foreach (var configuration in context.Configurations)
+        foreach (var configuration in context.QuarkConfigurations)
         {
             // Copy all global tasks to each target group.
             foreach (var targetGroup in configuration.TargetGroups)

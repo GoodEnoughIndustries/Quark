@@ -11,11 +11,6 @@ namespace Quark.Windows
 
         public List<IQuarkTarget> Targets { get; init; } = new();
 
-        public Task BuildAsync(IQuarkExecutionContext context, CancellationToken token)
-        {
-            return Task.CompletedTask;
-        }
-
         public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTarget target)
         {
             return QuarkResult.GetResult(RunResult.NotImplemented, target, this);

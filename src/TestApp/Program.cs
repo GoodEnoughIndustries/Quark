@@ -10,9 +10,9 @@ var configuration = new QuarkConfigurationBuilder()
     .ManagePackage(Packages.WinDirStat, shouldExist: false)
     .WithTarget(target: "localhost", QuarkTargetTypes.Windows, async (context, manager, target) =>
     {
-        manager.ElevateAs(adminCredential);
-
-        manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
+        // manager.ElevateAs(adminCredential);
+        // 
+        // manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
         await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
     })
     .Build();
