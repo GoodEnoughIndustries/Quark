@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Quark.Abstractions\Quark.Abstractions.csproj" />
     <ProjectReference Include="..\Quark\Quark.csproj" />
+    <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="Serilog" Version="2.11.0" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />

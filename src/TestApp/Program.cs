@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Quark;
 using Quark.Abstractions;
+using Quark.PowerShell;
 using TestApp;
 
 var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "password");
@@ -14,6 +15,7 @@ var configuration = new QuarkConfigurationBuilder()
         // 
         // manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
         await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
+        manager.PowershellRun(path: "install.ps1");
     })
     .Build();
 

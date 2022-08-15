@@ -37,4 +37,15 @@ public class FileSystemFileProvider : IQuarkFileProvider
 
         return Task.FromResult((FileInfo?)fi);
     }
+
+    public Task<bool> DeleteFile(string path)
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            return Task.FromResult(true);
+        }
+
+        return Task.FromResult(false);
+    }
 }

@@ -10,4 +10,5 @@ public interface IQuarkFileSystem
     IEnumerable<IQuarkFileProvider> FileProviders { get; init; }
 
     string GetTemporaryDirectory();
+    Task<bool> TryDeleteFile(string path);
 }

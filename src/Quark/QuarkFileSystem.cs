@@ -20,7 +20,7 @@ public class QuarkFileSystem : IQuarkFileSystem
         this.FileProviders = fileProviders;
 
         this.tempPath = Path.GetTempPath();
-        Directory.CreateDirectory(tempPath);
+        Directory.CreateDirectory(this.tempPath);
     }
 
     public IEnumerable<IQuarkFileProvider> FileProviders { get; init; }
@@ -35,6 +35,15 @@ public class QuarkFileSystem : IQuarkFileSystem
         }
 
         return Task.FromResult((FileInfo?)null);
+    }
+
+    public async Task<bool> TryDeleteFile(string path)
+    {
+        var fp = this.FileProviders.FirstOrDefault(fp => fp.FileExists(path));
+
+        return fp is not null
+        ? await fp.DeleteFile(path)
+        : false;
     }
 
     public string GetTemporaryDirectory()

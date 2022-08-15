@@ -21,6 +21,8 @@ public class QuarkFilesFileProvider : IQuarkFileProvider
         this.context = context;
     }
 
+    public void DeleteFile(string path) => throw new NotImplementedException();
+
     public bool FileExists(string path)
     {
         // Go through all the Directories Operator provided that should
@@ -57,4 +59,6 @@ public class QuarkFilesFileProvider : IQuarkFileProvider
 
         return Task.FromResult(fileInfo);
     }
+
+    Task<bool> IQuarkFileProvider.DeleteFile(string path) => throw new NotImplementedException();
 }

@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Quark.Abstractions\Quark.Abstractions.csproj" />
     <ProjectReference Include="..\Quark.Elasticsearch\Quark.Elasticsearch.csproj" />
+    <ProjectReference Include="..\Quark.PowerShell\Quark.PowerShell.csproj" />
     <ProjectReference Include="..\Quark.System\Quark.Systems.csproj" />
     <ProjectReference Include="..\Quark.Windows\Quark.Windows.csproj" />
     <ProjectReference Include="..\Quark\Quark.csproj" />
