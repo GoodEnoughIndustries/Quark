@@ -97,25 +97,15 @@ public class ManagePackageTask : IQuarkTask
                 return QuarkResult.GetFailed(target, this);
             }
 
-            // TODO: real Process handler, so we can capture logs
-            // have remote Process, etc.
-            var psi = new ProcessStartInfo
-            {
-                Arguments = this.PackageDescription.GetArguments(),
-                FileName = uninstallFile.FullName,
-                Verb = "runas",
-                UseShellExecute = true,
-            };
+            var processResult = await pp.Start(uninstallFile.FullName, this.PackageDescription.GetArguments());
 
-            using var process = await pp.Start(psi);
-
-            if (process is null)
+            if (processResult.ExitCode != 0)
             {
                 return QuarkResult.GetFailed(target, this);
             }
             else
             {
-                await process.WaitForExitAsync();
+                // await processResult.WaitForExitAsync();
                 // TODO: put a some checks on this.
                 // It can take a brief amount of time before the files is gone.
                 while (uninstallFile is not null)
@@ -139,24 +129,16 @@ public class ManagePackageTask : IQuarkTask
         {
             var logger = context.GetLogger<ManagePackageTask>();
 
-            var psi = new ProcessStartInfo
-            {
-                Arguments = this.PackageDescription.GetArguments(),
-                FileName = this.PackageDescription.GetInstallerPath(),
-                Verb = "runas",
-                UseShellExecute = true,
-            };
+            installFile = await fs.GetFileAsync(this.PackageDescription.GetInstallerPath());
 
-            logger.LogInformation("{PackageDescription} is being installed: {ProcessStartInfo}", this.PackageDescription, psi);
+            ArgumentNullException.ThrowIfNull(installFile);
 
-            using var process = await pp.Start(psi);
-            if (process is null)
+            logger.LogInformation("{PackageDescription} is being installed: {FilePath} {Arguments}", this.PackageDescription, installFile.FullName, this.PackageDescription.GetArguments());
+
+            var processResult = await pp.Start(installFile.FullName, this.PackageDescription.GetArguments());
+            if (processResult.ExitCode != 0)
             {
                 return QuarkResult.GetFailed(target, this);
-            }
-            else
-            {
-                await process.WaitForExitAsync();
             }
         }
 

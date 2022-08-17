@@ -29,14 +29,17 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
     public async Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
     {
+        Task? task = null;
         if (this.Context is not null && this.Target is not null)
         {
-            await taskRun(this.Context, this, this.Target);
+            task = taskRun(this.Context, this, this.Target);
         }
         else
         {
             this.DeferredActions.Add(taskRun);
         }
+
+        task?.Wait();
 
         return this;
     }

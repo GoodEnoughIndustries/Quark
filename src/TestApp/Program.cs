@@ -13,9 +13,9 @@ var configuration = new QuarkConfigurationBuilder()
     {
         // manager.ElevateAs(adminCredential);
         // 
-        // manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
+        manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
         await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
-        manager.PowershellRun(path: "install.ps1");
+        manager.PowershellRun(path: "install.ps1", creates: @"C:\ProgramData\chocolatey\choco.exe");
     })
     .Build();
 

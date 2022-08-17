@@ -38,6 +38,6 @@ public static class QuarkSystemExtensions
         string url,
         string destination)
     => manager.RunQuarkTask((context, manager, target)
-            => new DownloadTask(url, destination)
-            .ExecuteAsync(context, target));
+        => new DownloadTask(url, destination)
+        .ExecuteAsync(context, target));
 }

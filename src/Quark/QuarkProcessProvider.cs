@@ -1,9 +1,12 @@
+using CliWrap;
+using CliWrap.EventStream;
 using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Quark;
@@ -27,28 +30,60 @@ public class QuarkProcessProvider : IQuarkProcessProvider
         this.credentials = credentialProvider;
     }
 
-    public async Task<Process?> Start(ProcessStartInfo psi)
+    // TODO: This is almost exactly from Cupboard - will work it more into a Quark pattern later.
+    // Never used CliWrap before, still getting a feel.
+    public async Task<ProcessResult> Start(string path, string? arguments = null, Func<string, bool>? filter = null, bool supressOutput = false)
     {
-        ArgumentNullException.ThrowIfNull(psi);
+        var cli = Cli.Wrap(path).WithValidation(CommandResultValidation.None);
 
-        var file = await this.fileSystem.GetFileAsync(psi.FileName);
-        if (file is null)
+        if (!string.IsNullOrWhiteSpace(arguments))
         {
-            throw new FileNotFoundException();
+            cli = cli.WithArguments(arguments);
         }
 
-        psi.FileName = file.FullName;
+        var standardOut = new StringBuilder();
+        var standardError = new StringBuilder();
+        var exitCode = -1;
 
-        // TODO: Hook up logging and all sorts of goodies.
-        try
-        {
-            return Process.Start(psi);
-        }
-        catch (Win32Exception e) when (e.NativeErrorCode == 2)
-        {
-            this.logger.LogError("File not found in {ProcessStartInfo}", psi);
+        //cli = cli
+        //    .WithStandardOutputPipe(PipeTarget.ToStringBuilder(standardOut))
+        //    .WithStandardErrorPipe(PipeTarget.ToStringBuilder(standardError));
+        //
+        //var result = await cli.ExecuteAsync().ConfigureAwait(false);
+        //
+        //exitCode = result.ExitCode;
 
-            return null;
+        await foreach (var cmdEvent in cli.ListenAsync())
+        {
+            switch (cmdEvent)
+            {
+                case StartedCommandEvent started:
+                    break;
+                case StandardOutputCommandEvent output:
+                    standardOut.Append(output.Text);
+                    if (!supressOutput && !string.IsNullOrWhiteSpace(output.Text) && (filter?.Invoke(output.Text) ?? true))
+                    {
+                        this.logger.LogInformation("OUT> {Text}", output.Text/*.EscapeMarkup()*/.TrimStart());
+                    }
+
+                    break;
+                case StandardErrorCommandEvent error:
+                    if (!supressOutput && !string.IsNullOrWhiteSpace(error.Text) && (filter?.Invoke(error.Text) ?? true))
+                    {
+                        this.logger.LogError("ERR> {Text}", error.Text/*.EscapeMarkup()*/.TrimStart());
+                    }
+
+                    standardError.Append(error.Text);
+                    break;
+                case ExitedCommandEvent exited:
+                    exitCode = exited.ExitCode;
+                    break;
+            }
         }
+
+        return new ProcessResult(
+            exitCode,
+            standardOut.ToString(),
+            standardError.ToString());
     }
 }

@@ -1,10 +1,12 @@
-using System.Diagnostics;
+using System;
 using System.Threading.Tasks;
 
 namespace Quark.Abstractions
 {
     public interface IQuarkProcessProvider
     {
-        Task<Process?> Start(ProcessStartInfo psi);
+        Task<ProcessResult> Start(string path, string? arguments = null, Func<string, bool>? filter = null, bool supressOutput = false);
     }
+
+    public record ProcessResult(int ExitCode, string? StandardOut = null, string? StandardError = null);
 }
