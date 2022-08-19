@@ -27,7 +27,7 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
     public List<ExecutingRunnerAsync> DeferredActions { get; } = new();
 
-    public async Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
+    public Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
     {
         Task? task = null;
         if (this.Context is not null && this.Target is not null)
@@ -41,6 +41,6 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
         task?.Wait();
 
-        return this;
+        return Task.FromResult<IQuarkTargetManager>(this);
     }
 }

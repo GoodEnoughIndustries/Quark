@@ -83,12 +83,14 @@ public class QuarkRunnerBuilder : IHostBuilder
     }
 
     public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
+        where TContainerBuilder : notnull
     {
         this.hostBuilder.UseServiceProviderFactory(factory);
         return this;
     }
 
     public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
+        where TContainerBuilder : notnull
     {
         ArgumentNullException.ThrowIfNull(factory);
 

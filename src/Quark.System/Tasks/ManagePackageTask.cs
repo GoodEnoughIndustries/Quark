@@ -131,7 +131,11 @@ public class ManagePackageTask : IQuarkTask
 
             installFile = await fs.GetFileAsync(this.PackageDescription.GetInstallerPath());
 
-            ArgumentNullException.ThrowIfNull(installFile);
+            if (installFile is null)
+            {
+                logger.LogInformation("{PackageDescription} cannot find {FilePath}", this.PackageDescription, this.PackageDescription.GetInstallerPath());
+                return QuarkResult.GetFailed(target, this);
+            }
 
             logger.LogInformation("{PackageDescription} is being installed: {FilePath} {Arguments}", this.PackageDescription, installFile.FullName, this.PackageDescription.GetArguments());
 
