@@ -2,8 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quark.Abstractions;
-using Serilog;
-using Serilog.Events;
 using System;
 using System.Collections.Generic;
 
@@ -92,6 +90,8 @@ public class QuarkRunnerBuilder : IHostBuilder
 
     public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
     {
+        ArgumentNullException.ThrowIfNull(factory);
+
         this.hostBuilder.UseServiceProviderFactory(factory);
         return this;
     }
