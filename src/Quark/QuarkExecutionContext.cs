@@ -22,7 +22,7 @@ public class QuarkExecutionContext : IQuarkExecutionContext
     public List<IQuarkResult> Results { get; } = new();
     public List<IQuarkTask> Tasks { get; } = new();
 
-    public async Task BuildAllAsync(QuarkContext context, CancellationToken token)
+    public Task BuildAllAsync(QuarkContext context, CancellationToken token)
     {
         if (this.CurrentConfiguration is null)
         {
@@ -59,6 +59,8 @@ public class QuarkExecutionContext : IQuarkExecutionContext
                 this.Targets.AddRange(targetGroup.Targets);
             }
         }
+
+        return Task.CompletedTask;
     }
 
     public async Task ExecuteTasksAsync(QuarkContext context, CancellationToken token)

@@ -8,7 +8,7 @@ namespace Quark;
 
 public class QuarkExecutor : IQuarkExecutor
 {
-    public async Task<QuarkResult> RunAsync(QuarkContext context, CancellationToken token)
+    public Task<IQuarkResult> RunAsync(QuarkContext context, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(context);
 
@@ -20,9 +20,9 @@ public class QuarkExecutor : IQuarkExecutor
             //await executionContext.ExecuteTasksAsync(context, token).ConfigureAwait(false);
         }
 
-        return new QuarkResult
+        return Task.FromResult<IQuarkResult>(new QuarkResult
         {
 
-        };
+        });
     }
 }

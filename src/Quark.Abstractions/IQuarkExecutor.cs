@@ -6,5 +6,5 @@ namespace Quark.Abstractions;
 
 public interface IQuarkExecutor
 {
-    Task<QuarkResult> RunAsync(QuarkContext context, CancellationToken cancellationToken = default);
+    Task<IQuarkResult> RunAsync(QuarkContext context, CancellationToken cancellationToken = default);
 }

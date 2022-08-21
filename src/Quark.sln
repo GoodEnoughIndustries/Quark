@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.editorconfig = ..\.editorconfig
 		..\.gitignore = ..\.gitignore
 		..\Directory.Build.props = ..\Directory.Build.props
+		..\.github\workflows\dotnet-core.yml = ..\.github\workflows\dotnet-core.yml
 		..\NuGet.Config = ..\NuGet.Config
 		..\README.md = ..\README.md
 	EndProjectSection
@@ -34,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.Windows", "Quark.Wind
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.Linux", "Quark.Linux\Quark.Linux.csproj", "{DD149A7C-187A-4055-9A20-A5E7A24CCCA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quark.PowerShell", "Quark.PowerShell\Quark.PowerShell.csproj", "{F56F7870-763B-480A-BAD3-6C8E8C7AD7AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.PowerShell", "Quark.PowerShell\Quark.PowerShell.csproj", "{F56F7870-763B-480A-BAD3-6C8E8C7AD7AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
