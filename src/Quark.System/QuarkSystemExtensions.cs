@@ -16,7 +16,7 @@ public static class QuarkSystemExtensions
 
         manager.RunQuarkTask((context, manager, target)
             => new ManagePackageTask(package, shouldExist)
-            .ExecuteAsync(context, target));
+            .ExecuteAsync(context, manager, target));
 
         return builder;
     }
@@ -26,9 +26,11 @@ public static class QuarkSystemExtensions
         IQuarkPackage package,
         bool shouldExist = true)
     {
-        manager.RunQuarkTask((context, manager, target)
-            => new ManagePackageTask(package, shouldExist)
-            .ExecuteAsync(context, target));
+        manager.RunQuarkTask((context, manager, target) =>
+        {
+            return new ManagePackageTask(package, shouldExist)
+            .ExecuteAsync(context, manager, target);
+        });
 
         return manager;
     }
@@ -39,5 +41,5 @@ public static class QuarkSystemExtensions
         string destination)
     => manager.RunQuarkTask((context, manager, target)
         => new DownloadTask(url, destination)
-        .ExecuteAsync(context, target));
+        .ExecuteAsync(context, manager, target));
 }

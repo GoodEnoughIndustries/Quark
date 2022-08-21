@@ -21,7 +21,7 @@ public class ManagePackageTask : IQuarkTask
         this.ShouldExist = shouldExist;
     }
 
-    public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTarget target)
+    public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTargetManager manager, IQuarkTarget target)
     {
         var result = target.Type == QuarkTargetTypes.Windows
             ? await WindowsExecuteAsync(context, target)

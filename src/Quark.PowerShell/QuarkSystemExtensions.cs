@@ -4,15 +4,22 @@ namespace Quark.PowerShell;
 
 public static class QuarkSystemExtensions
 {
-    public static IQuarkTargetManager PowershellRun(
-        this IQuarkTargetManager builder,
+    /// <summary>
+    /// Executes a PowerShell script.
+    /// </summary>
+    /// <param name="manager">The <seealso cref="IQuarkTargetManager"/> executing this.</param>
+    /// <param name="path">The path to the PowerShell script to run.</param>
+    /// <param name="creates">The file or folder that exists after this the script is ran.</param>
+    /// <returns></returns>
+    public static IQuarkTargetManager PowerShellRun(
+        this IQuarkTargetManager manager,
         string path,
         string creates)
     {
-        builder.RunQuarkTask((context, manager, target)
+        manager.RunQuarkTask((context, manager, target)
             => new PowershellRunTask(path, creates)
             .ExecuteAsync(context, target));
 
-        return builder;
+        return manager;
     }
 }

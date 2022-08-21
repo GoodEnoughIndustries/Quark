@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,7 +21,8 @@ public class QuarkContext
         IConfiguration configuration,
         ILoggerFactory loggerFactory,
         IQuarkFileSystem fileSystem,
-        IQuarkExecutor executor)
+        IQuarkExecutor executor,
+        IServiceProvider serviceProvider)
     {
         this.CredentialProvider = credentialProvider;
         this.SecurityProviders = securityProviders;
@@ -28,6 +30,7 @@ public class QuarkContext
         this.ExecutionContext = executionContext;
         this.ExecutingTask = Task.CompletedTask;
         this.ProcessProvider = processProvider;
+        this.ServiceProvider = serviceProvider;
         this.Configuration = configuration;
         this.FactProviders = factProviders;
         this.loggerFactory = loggerFactory;
@@ -41,13 +44,14 @@ public class QuarkContext
     public IEnumerable<IQuarkFactProvider> FactProviders { get; init; }
     public IQuarkCredentialProvider CredentialProvider { get; init; }
     public IQuarkExecutionContext ExecutionContext { get; init; }
+    public List<IQuarkTask> ManagementTasks { get; set; } = new();
     public IQuarkProcessProvider ProcessProvider { get; init; }
+    public IServiceProvider ServiceProvider { get; init; }
     public IConfiguration Configuration { get; init; }
     public ILogger<QuarkContext> Logger { get; init; }
     public IQuarkFileSystem FileSystem { get; init; }
     public IQuarkExecutor Executor { get; init; }
     public Task ExecutingTask { get; set; }
-    public List<IQuarkTask> ManagementTasks { get; set; } = new();
 
     public ILogger<TCategory> GetLogger<TCategory>()
         => this.loggerFactory.CreateLogger<TCategory>();

@@ -20,7 +20,7 @@ namespace Quark.Systems
 
         public List<IQuarkTarget> Targets { get; init; } = new();
 
-        public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTarget target)
+        public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTargetManager manager, IQuarkTarget target)
         {
             var fs = context.FileSystem;
 

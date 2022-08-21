@@ -7,5 +7,5 @@ public interface IQuarkTask
 {
     public string TaskName => this.GetType().Name;
     List<IQuarkTarget> Targets { get; init; }
-    Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTarget target);
+    Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTargetManager manager, IQuarkTarget target);
 }

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -8,18 +9,23 @@ namespace Quark;
 
 public class QuarkTargetRunner : IQuarkTargetManager
 {
+    private readonly ILogger<QuarkTargetRunner>? logger;
+
     public QuarkTargetRunner()
     {
+
     }
 
-    public QuarkTargetRunner(QuarkContext context, IQuarkTarget target)
+    public QuarkTargetRunner(ILogger<QuarkTargetRunner> logger, QuarkContext context, IQuarkTarget target)
     {
         this.Context = context;
         this.Target = target;
+        this.logger = logger;
     }
 
     public QuarkContext? Context { get; }
     public IQuarkTarget? Target { get; }
+
 
     public List<IQuarkTask> QuarkTasks { get; } = new();
     public List<IQuarkTargetGroup> TargetGroups { get; } = new();
@@ -27,7 +33,7 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
     public List<ExecutingRunnerAsync> DeferredActions { get; } = new();
 
-    public async Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
+    public Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
     {
         Task? task = null;
         if (this.Context is not null && this.Target is not null)
@@ -41,6 +47,12 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
         task?.Wait();
 
-        return this;
+        if (task is Task<IQuarkResult> runResult)
+        {
+            var result = runResult.Result;
+            this.logger?.LogInformation(result.Result.ToString());
+        }
+
+        return Task.FromResult<IQuarkTargetManager>(this);
     }
 }

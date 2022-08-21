@@ -2,6 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Quark;
 using Quark.Abstractions;
 using Quark.PowerShell;
+using System.Threading.Tasks;
 using TestApp;
 
 var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "password");
@@ -9,14 +10,11 @@ var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "pas
 var configuration = new QuarkConfigurationBuilder()
     .WithQuarkFiles(path: @"C:\QuarkFiles")
     .ManagePackage(Packages.WinDirStat, shouldExist: false)
-    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, async (context, manager, target) =>
+    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, (ExecutingRunnerAsync)(async (context, manager, target) =>
     {
-        // manager.ElevateAs(adminCredential);
-        // 
         manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
-        await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
-        manager.PowershellRun(path: "install.ps1", creates: @"C:\ProgramData\chocolatey\choco.exe");
-    })
+        await InstallChocolately(manager);
+    }))
     .Build();
 
 var runner = new QuarkRunnerBuilder(args)
@@ -28,6 +26,12 @@ var runner = new QuarkRunnerBuilder(args)
 await runner.RunAsync();
 
 return 0;
+
+static async Task InstallChocolately(IQuarkTargetManager manager)
+{
+    await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
+    manager.PowerShellRun(path: "install.ps1", creates: @"C:\ProgramData\chocolatey\choco.exe");
+}
 
 //        builder.PowershellRun(path: "install.ps1");
 //        builder.PowershellRun(script: """

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,8 @@ public class QuarkConfigurationBuilder : QuarkTargetRunner
     {
     }
 
-    public QuarkConfigurationBuilder(QuarkContext context, IQuarkTarget target)
-        : base(context, target)
+    public QuarkConfigurationBuilder(ILogger<QuarkConfigurationBuilder> logger, QuarkContext context, IQuarkTarget target)
+        : base(logger, context, target)
     {
     }
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
 using System.Collections.Generic;
@@ -71,8 +72,10 @@ public class QuarkExecutionContext : IQuarkExecutionContext
 
             foreach (var manageAction in target.ManageActions)
             {
-                var tm = new QuarkTargetRunner(context, target);
+                var tm = ActivatorUtilities.CreateInstance<QuarkTargetRunner>(context.ServiceProvider, context, target);
+                //var tm = new QuarkTargetRunner(context, target);
                 await manageAction(context, tm, target);
+
             }
         }
     }
