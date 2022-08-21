@@ -18,7 +18,7 @@ public static class QuarkSystemExtensions
     {
         manager.RunQuarkTask((context, manager, target)
             => new PowershellRunTask(path, creates)
-            .ExecuteAsync(context, target));
+            .ExecuteAsync(context, manager, target));
 
         return manager;
     }
