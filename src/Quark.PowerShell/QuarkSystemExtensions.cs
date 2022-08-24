@@ -10,7 +10,7 @@ public static class QuarkSystemExtensions
     /// <param name="manager">The <seealso cref="IQuarkTargetManager"/> executing this.</param>
     /// <param name="path">The path to the PowerShell script to run.</param>
     /// <param name="creates">The file or folder that exists after this the script is ran.</param>
-    /// <returns></returns>
+    /// <returns>The <seealso cref="IQuarkTargetManager"/> to chain tasks with.</returns>
     public static IQuarkTargetManager PowerShellRun(
         this IQuarkTargetManager manager,
         string path,

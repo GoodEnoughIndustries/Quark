@@ -10,11 +10,11 @@ var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "pas
 var configuration = new QuarkConfigurationBuilder()
     .WithQuarkFiles(path: @"C:\QuarkFiles")
     .ManagePackage(Packages.WinDirStat, shouldExist: false)
-    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, (ExecutingRunnerAsync)(async (context, manager, target) =>
+    .WithTarget(target: "localhost", QuarkTargetTypes.Windows, async (context, manager, target) =>
     {
         manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
         await InstallChocolately(manager);
-    }))
+    })
     .Build();
 
 var runner = new QuarkRunnerBuilder(args)
