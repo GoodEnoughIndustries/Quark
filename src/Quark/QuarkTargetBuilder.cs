@@ -1,7 +1,5 @@
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,7 +11,6 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
     public QuarkTargetRunner()
     {
-
     }
 
     public QuarkTargetRunner(ILogger<QuarkTargetRunner> logger, QuarkContext context, IQuarkTarget target)
@@ -25,8 +22,6 @@ public class QuarkTargetRunner : IQuarkTargetManager
 
     public QuarkContext? Context { get; }
     public IQuarkTarget? Target { get; }
-
-
     public List<IQuarkTask> QuarkTasks { get; } = new();
     public List<IQuarkTargetGroup> TargetGroups { get; } = new();
     public List<IQuarkCredential> Credentials { get; } = new();
@@ -50,7 +45,7 @@ public class QuarkTargetRunner : IQuarkTargetManager
         if (task is Task<IQuarkResult> runResult)
         {
             var result = runResult.Result;
-            this.logger?.LogInformation(result.Result.ToString());
+            this.logger?.LogInformation("{Result}", result.Result.ToString());
         }
 
         return Task.FromResult<IQuarkTargetManager>(this);

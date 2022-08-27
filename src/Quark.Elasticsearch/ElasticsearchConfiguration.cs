@@ -41,7 +41,7 @@ public class ElasticsearchConfiguration
 
             public class PingConfiguration
             {
-                public IEnumerable<IQuarkTargetGroup> UnicastHosts { get; set; }
+                public IEnumerable<IQuarkTargetGroup> UnicastHosts { get; set; } = new List<IQuarkTargetGroup>();
             }
         }
     }

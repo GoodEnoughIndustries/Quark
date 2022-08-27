@@ -24,10 +24,7 @@ public class QuarkExecutionContext : IQuarkExecutionContext
 
     public Task BuildAllAsync(QuarkContext context, CancellationToken token)
     {
-        if (this.CurrentConfiguration is null)
-        {
-            this.CurrentConfiguration = context.QuarkConfigurations.First();
-        }
+        this.CurrentConfiguration ??= context.QuarkConfigurations.First();
 
         foreach (var configuration in context.QuarkConfigurations)
         {
@@ -75,9 +72,7 @@ public class QuarkExecutionContext : IQuarkExecutionContext
             foreach (var manageAction in target.ManageActions)
             {
                 var tm = ActivatorUtilities.CreateInstance<QuarkTargetRunner>(context.ServiceProvider, context, target);
-                //var tm = new QuarkTargetRunner(context, target);
                 await manageAction(context, tm, target);
-
             }
         }
     }

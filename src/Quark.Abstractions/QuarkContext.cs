@@ -21,7 +21,6 @@ public class QuarkContext
         IConfiguration configuration,
         ILoggerFactory loggerFactory,
         IQuarkFileSystem fileSystem,
-        IQuarkExecutor executor,
         IServiceProvider serviceProvider)
     {
         this.CredentialProvider = credentialProvider;
@@ -35,7 +34,6 @@ public class QuarkContext
         this.FactProviders = factProviders;
         this.loggerFactory = loggerFactory;
         this.FileSystem = fileSystem;
-        this.Executor = executor;
         this.Logger = logger;
     }
 
@@ -50,7 +48,6 @@ public class QuarkContext
     public IConfiguration Configuration { get; init; }
     public ILogger<QuarkContext> Logger { get; init; }
     public IQuarkFileSystem FileSystem { get; init; }
-    public IQuarkExecutor Executor { get; init; }
     public Task ExecutingTask { get; set; }
 
     public ILogger<TCategory> GetLogger<TCategory>()

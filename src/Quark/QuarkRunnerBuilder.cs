@@ -21,7 +21,6 @@ public class QuarkRunnerBuilder : IHostBuilder
             {
                 sc.AddSingleton<IQuarkCredentialProvider, QuarkCredentialProvider>();
                 sc.AddSingleton<IQuarkExecutionContext, QuarkExecutionContext>();
-                sc.AddSingleton<IQuarkExecutor, QuarkExecutor>();
                 sc.AddHostedService<QuarkHostedService>();
                 sc.AddSingleton<QuarkContext>();
             });

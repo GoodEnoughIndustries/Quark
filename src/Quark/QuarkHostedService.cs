@@ -14,7 +14,7 @@ public class QuarkHostedService : BackgroundService, IQuarkExecutorHostedService
     private readonly ILogger<QuarkHostedService> logger;
     private readonly IServiceProvider services;
     private readonly IHostApplicationLifetime appLifetime;
-    private PeriodicTimer executionTimer = default!;
+    private readonly PeriodicTimer executionTimer = default!;
 
     public QuarkHostedService(
         QuarkContext context,

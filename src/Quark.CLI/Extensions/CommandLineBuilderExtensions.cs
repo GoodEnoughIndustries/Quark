@@ -9,9 +9,9 @@ namespace System.CommandLine.Builder
             => builder
                 .UseHelp()
                 .UseVersionOption()
-                .UseDebugDirective()
+                //.UseDebugDirective()
                 .UseParseErrorReporting()
-                .ParseResponseFileAs(ResponseFileHandling.ParseArgsAsSpaceSeparated)
+                //.ParseResponseFileAs(ResponseFileHandling.ParseArgsAsSpaceSeparated)
                 .CancelOnProcessTermination()
                 .UseAnsiTerminalWhenAvailable()
                 .UseDefaults();

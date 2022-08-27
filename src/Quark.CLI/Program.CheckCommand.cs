@@ -16,12 +16,12 @@ public partial class Program
         var checkCommand = new Command("check", "Starts a dry-run of specified runbook(s) against provided target(s).")
         {
             TreatUnmatchedTokensAsErrors = true,
-            Handler = CommandHandler.Create<QuarkCLIOptions, InvocationContext, IConsole, IHost>(RunCheck),
+            //Handler = CommandHandler.Create<QuarkCLIOptions, InvocationContext, IConsole, IHost>(RunCheck),
         };
 
-        checkCommand.Add(RunbookOption(required: true));
+        // checkCommand.Add(RunbookOption(required: true));
         checkCommand.Add(TargetsOption(required: true));
-        checkCommand.Add(MetadataOption(required: false));
+        // checkCommand.Add(MetadataOption(required: false));
 
         return checkCommand;
     }
