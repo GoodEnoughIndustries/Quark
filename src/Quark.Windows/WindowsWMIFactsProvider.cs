@@ -22,7 +22,7 @@ public class WindowsWMIFactsProvider : IQuarkFactProvider
         RunResult result = RunResult.Unknown;
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-            && target.Type == QuarkTargetTypes.Windows)
+            && target.TargetType == QuarkTargetTypes.Windows)
         {
             result = await GatherWindowsFacts(target)
                 ? RunResult.Success

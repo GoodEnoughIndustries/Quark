@@ -42,7 +42,7 @@ public class QuarkTargetGroup : IQuarkTargetGroup
             this.Targets.Add(new QuarkTarget
             {
                 Name = this.Pattern,
-                Type = this.Type,
+                TargetType = this.Type,
             });
         }
     }

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Quark;
+using Quark.Chocolatey;
 using Quark.Abstractions;
 using Quark.PowerShell;
 using System.Threading.Tasks;
@@ -13,7 +14,8 @@ var configuration = new QuarkConfigurationBuilder()
     .WithTarget(target: "localhost", QuarkTargetTypes.Windows, async (context, manager, target) =>
     {
         manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
-        await InstallChocolately(manager);
+        await manager.InstallChocolatey();
+        await manager.ChocolateyPackage(context, "vscode", shouldExist: true);
     })
     .Build();
 
@@ -26,12 +28,6 @@ var runner = new QuarkRunnerBuilder(args)
 await runner.RunAsync();
 
 return 0;
-
-static async Task InstallChocolately(IQuarkTargetManager manager)
-{
-    await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
-    manager.PowerShellRun(path: "install.ps1", creates: @"C:\ProgramData\chocolatey\choco.exe");
-}
 
 //        builder.PowershellRun(path: "install.ps1");
 //        builder.PowershellRun(script: """

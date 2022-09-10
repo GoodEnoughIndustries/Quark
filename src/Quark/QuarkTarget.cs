@@ -7,11 +7,13 @@ namespace Quark;
 public class QuarkTarget : IQuarkTarget
 {
     public string Name { get; init; } = string.Empty;
-    public QuarkTargetTypes Type { get; init; } = QuarkTargetTypes.Unknown;
+    public QuarkTargetTypes TargetType { get; init; } = QuarkTargetTypes.Unknown;
     public TargetStatus Status { get; set; } = TargetStatus.Unknown;
     public List<IQuarkTask> Tasks { get; init; } = new();
     public Dictionary<string, object> Facts { get; init; } = new();
     public List<ExecutingRunnerAsync> ManageActions { get; set; } = new();
 
-    public override string ToString() => $"{this.Type}: {this.Name}";
+    public QuarkTargetTypes RuntimeTargetType { get; set; } = QuarkTargetTypes.Unknown;
+
+    public override string ToString() => $"{this.TargetType}: {this.Name}";
 }

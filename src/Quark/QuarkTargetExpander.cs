@@ -33,7 +33,7 @@ public class QuarkTargetExpander : IQuarkTargetExpander
                 expandedTargets.Add(new QuarkTarget
                 {
                     Name = t,
-                    Type = targetGroup.Type,
+                    TargetType = targetGroup.Type,
                 });
             }
 

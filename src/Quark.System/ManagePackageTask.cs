@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Quark.Systems.Tasks;
+namespace Quark.Systems;
 
 public class ManagePackageTask : IQuarkTask
 {
@@ -23,7 +23,7 @@ public class ManagePackageTask : IQuarkTask
 
     public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTargetManager manager, IQuarkTarget target)
     {
-        var result = target.Type == QuarkTargetTypes.Windows
+        var result = target.TargetType == QuarkTargetTypes.Windows
             ? await WindowsExecuteAsync(context, target)
             : QuarkResult.GetResult(RunResult.NotImplemented, target, this);
 

@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.Linux", "Quark.Linux\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quark.PowerShell", "Quark.PowerShell\Quark.PowerShell.csproj", "{F56F7870-763B-480A-BAD3-6C8E8C7AD7AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quark.Chocolatey", "Quark.Chocolatey\Quark.Chocolatey.csproj", "{A6810F8F-363C-4F02-905A-0F913D26AEB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{F56F7870-763B-480A-BAD3-6C8E8C7AD7AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F56F7870-763B-480A-BAD3-6C8E8C7AD7AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F56F7870-763B-480A-BAD3-6C8E8C7AD7AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6810F8F-363C-4F02-905A-0F913D26AEB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6810F8F-363C-4F02-905A-0F913D26AEB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6810F8F-363C-4F02-905A-0F913D26AEB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6810F8F-363C-4F02-905A-0F913D26AEB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

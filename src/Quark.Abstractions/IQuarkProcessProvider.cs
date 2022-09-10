@@ -8,5 +8,10 @@ namespace Quark.Abstractions
         Task<ProcessResult> Start(string path, string? arguments = null, Func<string, bool>? filter = null, bool supressOutput = false);
     }
 
-    public record ProcessResult(int ExitCode, string? StandardOut = null, string? StandardError = null);
+    public record ProcessResult(
+        string Path,
+        string? Arguments,
+        int ExitCode,
+        string? StandardOut = null,
+        string? StandardError = null);
 }

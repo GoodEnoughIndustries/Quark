@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -64,16 +65,41 @@ public class QuarkExecutionContext : IQuarkExecutionContext
     {
         foreach (var target in this.Targets)
         {
-            if (target.Status.HasFlag(TargetStatus.Faulted))
-            {
-                continue;
-            }
+            target.RuntimeTargetType = FromPlatformId(Environment.OSVersion.Platform);
 
-            foreach (var manageAction in target.ManageActions)
+            try
             {
-                var tm = ActivatorUtilities.CreateInstance<QuarkTargetRunner>(context.ServiceProvider, context, target);
-                await manageAction(context, tm, target);
+                if (target.RuntimeTargetType != target.TargetType)
+                {
+                    throw new QuarkWrongTargetTypeException(target);
+                }
+
+                if (target.Status.HasFlag(TargetStatus.Faulted))
+                {
+                    continue;
+                }
+
+
+
+                foreach (var manageAction in target.ManageActions)
+                {
+                    var tm = ActivatorUtilities.CreateInstance<QuarkTargetRunner>(context.ServiceProvider, context, target);
+                    await manageAction(context, tm, target);
+                }
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, e.Message);
+                target.Status = TargetStatus.Faulted;
             }
         }
     }
+
+    private static QuarkTargetTypes FromPlatformId(PlatformID platformID)
+    => platformID switch
+    {
+        PlatformID.Win32NT => QuarkTargetTypes.Windows,
+        PlatformID.Unix => QuarkTargetTypes.Linux,
+        _ => throw new PlatformNotSupportedException($"{platformID} is not supported yet!"),
+    };
 }

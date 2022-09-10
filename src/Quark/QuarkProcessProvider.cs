@@ -45,14 +45,6 @@ public class QuarkProcessProvider : IQuarkProcessProvider
         var standardError = new StringBuilder();
         var exitCode = -1;
 
-        //cli = cli
-        //    .WithStandardOutputPipe(PipeTarget.ToStringBuilder(standardOut))
-        //    .WithStandardErrorPipe(PipeTarget.ToStringBuilder(standardError));
-        //
-        //var result = await cli.ExecuteAsync().ConfigureAwait(false);
-        //
-        //exitCode = result.ExitCode;
-
         await foreach (var cmdEvent in cli.ListenAsync())
         {
             switch (cmdEvent)
@@ -60,7 +52,7 @@ public class QuarkProcessProvider : IQuarkProcessProvider
                 case StartedCommandEvent started:
                     break;
                 case StandardOutputCommandEvent output:
-                    standardOut.Append(output.Text);
+                    standardOut.AppendLine(output.Text);
                     if (!supressOutput && !string.IsNullOrWhiteSpace(output.Text) && (filter?.Invoke(output.Text) ?? true))
                     {
                         this.logger.LogInformation("OUT> {Text}", output.Text/*.EscapeMarkup()*/.TrimStart());
@@ -73,7 +65,7 @@ public class QuarkProcessProvider : IQuarkProcessProvider
                         this.logger.LogError("ERR> {Text}", error.Text/*.EscapeMarkup()*/.TrimStart());
                     }
 
-                    standardError.Append(error.Text);
+                    standardError.AppendLine(error.Text);
                     break;
                 case ExitedCommandEvent exited:
                     exitCode = exited.ExitCode;
@@ -82,6 +74,8 @@ public class QuarkProcessProvider : IQuarkProcessProvider
         }
 
         return new ProcessResult(
+            path,
+            arguments,
             exitCode,
             standardOut.ToString(),
             standardError.ToString());

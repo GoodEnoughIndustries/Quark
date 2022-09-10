@@ -6,11 +6,12 @@ namespace Quark.Abstractions;
 public interface IQuarkTarget
 {
     public List<ExecutingRunnerAsync> ManageActions { get; set; }
-    public QuarkTargetTypes Type { get; init; }
+    public QuarkTargetTypes TargetType { get; init; }
     public string Name { get; init; }
     public List<IQuarkTask> Tasks { get; init; }
     public Dictionary<string, object> Facts { get; init; }
     public TargetStatus Status { get; set; }
+    public QuarkTargetTypes RuntimeTargetType { get; set; }
 }
 
 [Flags]
