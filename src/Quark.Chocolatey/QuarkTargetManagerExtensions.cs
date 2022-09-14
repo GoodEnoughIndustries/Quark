@@ -31,6 +31,7 @@ public static class QuarkTargetManagerExtensions
         else if (isInstalled && !shouldExist)
         {
             // uninstall
+            var uninstallResult = await pp.Start("choco", $"uninstall {packageName} -y");
         }
         else if (!isInstalled && shouldExist)
         {
@@ -43,7 +44,7 @@ public static class QuarkTargetManagerExtensions
 
     private static (bool isInstalled, string? version) IsPackageInstalled(string packageName, ProcessResult processResult)
     {
-        bool isInstalled = false;
+        var isInstalled = false;
         string? version = null;
 
         if (string.IsNullOrEmpty(processResult.StandardOut)
@@ -53,11 +54,21 @@ public static class QuarkTargetManagerExtensions
         }
         else
         {
+            var installedList = processResult.StandardOut.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
+            if (installedList.Length > 0)
+            {
+                var package = Array.Find(installedList, il => il.Contains(packageName, StringComparison.OrdinalIgnoreCase));
+
+                if (package is not null)
+                {
+                    isInstalled = true;
+                    version = package.Split('|').Last();
+                }
+            }
         }
 
         return (isInstalled, version);
-        return (processResult.StandardOut?.Contains(packageName) ?? false, null);
     }
 
     private static async Task<ProcessResult> InstallPackage(QuarkContext context, string packageName)

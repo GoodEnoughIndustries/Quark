@@ -1,9 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Quark;
-using Quark.Chocolatey;
 using Quark.Abstractions;
-using Quark.PowerShell;
-using System.Threading.Tasks;
+using Quark.Chocolatey;
 using TestApp;
 
 var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "password");
@@ -16,6 +14,9 @@ var configuration = new QuarkConfigurationBuilder()
         manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
         await manager.InstallChocolatey();
         await manager.ChocolateyPackage(context, "vscode", shouldExist: true);
+
+        await manager.ChocolateyPackage(context, "postman", shouldExist: false);
+        await manager.ChocolateyPackage(context, "postman", shouldExist: true);
     })
     .Build();
 

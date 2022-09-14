@@ -14,9 +14,7 @@ public class QuarkExecutionContext : IQuarkExecutionContext
     private readonly ILogger<QuarkExecutionContext> logger;
 
     public QuarkExecutionContext(ILogger<QuarkExecutionContext> logger)
-    {
-        this.logger = logger;
-    }
+        => this.logger = logger;
 
     public IQuarkConfiguration? CurrentConfiguration { get; private set; }
     public List<IQuarkTarget> Targets { get; } = new();
@@ -79,8 +77,6 @@ public class QuarkExecutionContext : IQuarkExecutionContext
                     continue;
                 }
 
-
-
                 foreach (var manageAction in target.ManageActions)
                 {
                     var tm = ActivatorUtilities.CreateInstance<QuarkTargetRunner>(context.ServiceProvider, context, target);
@@ -89,7 +85,7 @@ public class QuarkExecutionContext : IQuarkExecutionContext
             }
             catch (Exception e)
             {
-                this.logger.LogError(e, e.Message);
+                this.logger.LogError(e, "{ExceptionMessage}", e.Message);
                 target.Status = TargetStatus.Faulted;
             }
         }

@@ -7,12 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="Mono.Posix.NETStandard" Version="5.20.1-preview" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Quark.Abstractions\Quark.Abstractions.csproj" />
     <ProjectReference Include="..\Quark\Quark.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0-preview1.22362.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
