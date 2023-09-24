@@ -16,8 +16,8 @@ public class EnvironmentFactsProvider : IQuarkFactProvider
 
         return Task.FromResult((IQuarkResult)new QuarkResult
         {
-            Result = RunResult.Success,
-            Target = target,
+            QuarkRunResult = QuarkRunResult.Success,
+            QuarkTarget = target,
         });
     }
 }

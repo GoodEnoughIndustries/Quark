@@ -7,8 +7,8 @@ public static class QuarkTargetManagerExtensions
 {
     public static async Task<IQuarkTargetManager> InstallChocolatey(this IQuarkTargetManager manager)
     {
-        await manager.DownloadFile(url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
-        return manager.PowerShellRun(path: "install.ps1", creates: @"C:\ProgramData\chocolatey\choco.exe");
+        await manager.DownloadFile("Downloading Chocolatey installer", url: "https://community.chocolatey.org/install.ps1", destination: "install.ps1");
+        return manager.PowerShellRun("Run Chocolatey installer", path: "install.ps1", creates: @"C:\ProgramData\chocolatey\choco.exe");
     }
 
     public static async Task<IQuarkTargetManager> ChocolateyPackage(this IQuarkTargetManager manager, QuarkContext context, string packageName, bool shouldExist = true)

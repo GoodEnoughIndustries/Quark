@@ -1,18 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\Quark.Abstractions\Quark.Abstractions.csproj" />
     <ProjectReference Include="..\Quark\Quark.csproj" />
-    <PackageReference Include="Flurl.Http" Version="4.0.0-pre2" />
-    <PackageReference Include="Serilog" Version="2.12.0" />
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Flurl.Http" Version="4.0.0-pre3" />
+    <PackageReference Include="Serilog" Version="3.0.2-dev-02056" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.1-dev-00944" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.5.0-dev-00353" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.2-dev-00546" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.2.0-dev-00918" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +27,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Update="Roslynator.Analyzers" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

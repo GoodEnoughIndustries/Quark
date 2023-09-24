@@ -4,12 +4,12 @@ namespace Quark;
 
 public interface IQuarkResult
 {
-    RunResult Result { get; init; }
-    IQuarkTask Task { get; init; }
-    IQuarkTarget Target { get; init; }
+    QuarkRunResult QuarkRunResult { get; init; }
+    IQuarkTask QuarkTask { get; init; }
+    IQuarkTarget QuarkTarget { get; init; }
 }
 
-public enum RunResult
+public enum QuarkRunResult
 {
     Unknown = 0,
     Success,

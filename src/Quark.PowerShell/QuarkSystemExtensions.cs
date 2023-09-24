@@ -13,11 +13,12 @@ public static class QuarkSystemExtensions
     /// <returns>The <seealso cref="IQuarkTargetManager"/> to chain tasks with.</returns>
     public static IQuarkTargetManager PowerShellRun(
         this IQuarkTargetManager manager,
+        string taskName,
         string path,
         string creates)
     {
         manager.RunQuarkTask((context, manager, target)
-            => new PowershellRunTask(path, creates)
+            => new PowershellRunTask(taskName, path, creates)
             .ExecuteAsync(context, manager, target));
 
         return manager;

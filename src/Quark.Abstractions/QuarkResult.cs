@@ -4,18 +4,18 @@ namespace Quark;
 
 public class QuarkResult : IQuarkResult
 {
-    public RunResult Result { get; init; } = RunResult.Unknown;
-    public IQuarkTask Task { get; init; } = default!;
-    public IQuarkTarget Target { get; init; } = default!;
+    public QuarkRunResult QuarkRunResult { get; init; } = QuarkRunResult.Unknown;
+    public IQuarkTask QuarkTask { get; init; } = default!;
+    public IQuarkTarget QuarkTarget { get; init; } = default!;
 
     public static QuarkResult GetFailed(IQuarkTarget target, IQuarkTask task)
-        => GetResult(RunResult.Fail, target, task);
+        => GetResult(QuarkRunResult.Fail, target, task);
 
-    public static QuarkResult GetResult(RunResult result, IQuarkTarget target, IQuarkTask task)
+    public static QuarkResult GetResult(QuarkRunResult result, IQuarkTarget target, IQuarkTask task)
         => new()
         {
-            Result = result,
-            Target = target,
-            Task = task,
+            QuarkRunResult = result,
+            QuarkTarget = target,
+            QuarkTask = task,
         };
 }

@@ -9,12 +9,9 @@ using System.Threading.Tasks;
 
 namespace Quark;
 
-public class QuarkExecutionContext : IQuarkExecutionContext
+public class QuarkExecutionContext(ILogger<QuarkExecutionContext> logger) : IQuarkExecutionContext
 {
-    private readonly ILogger<QuarkExecutionContext> logger;
-
-    public QuarkExecutionContext(ILogger<QuarkExecutionContext> logger)
-        => this.logger = logger;
+    private readonly ILogger<QuarkExecutionContext> logger = logger;
 
     public IQuarkConfiguration? CurrentConfiguration { get; private set; }
     public List<IQuarkTarget> Targets { get; } = new();

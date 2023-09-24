@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Quark.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,21 +32,39 @@ public class QuarkTargetRunner : IQuarkTargetManager
     public Task<IQuarkTargetManager> RunQuarkTask(ExecutingRunnerAsync taskRun)
     {
         Task? task = null;
-        if (this.Context is not null && this.Target is not null)
+        try
         {
-            task = taskRun(this.Context, this, this.Target);
-        }
-        else
-        {
-            this.DeferredActions.Add(taskRun);
-        }
+            if (this.Context is not null && this.Target is not null)
+            {
+                task = taskRun(this.Context, this, this.Target);
+            }
+            else
+            {
+                this.DeferredActions.Add(taskRun);
+            }
 
-        task?.Wait();
+            task?.Wait();
 
-        if (task is Task<IQuarkResult> runResult)
+            if (task is Task<IQuarkResult> runResult)
+            {
+                var result = runResult.Result;
+
+                var logLevel = result.QuarkRunResult switch
+                {
+                    QuarkRunResult.Unknown => LogLevel.Warning,
+                    QuarkRunResult.Success => LogLevel.Information,
+                    QuarkRunResult.Fail => LogLevel.Error,
+                    QuarkRunResult.Skipped => LogLevel.Information,
+                    QuarkRunResult.NotImplemented => LogLevel.Warning,
+                    _ => LogLevel.Information,
+                };
+
+                this.logger?.Log(logLevel, "{Result}: {TaskName}", result.QuarkRunResult.ToString(), result.QuarkTask.TaskName);
+                this.Context?.ExecutionContext.Results.Add(result);
+            }
+        }
+        catch (Exception e)
         {
-            var result = runResult.Result;
-            this.logger?.LogInformation("{Result}", result.Result.ToString());
         }
 
         return Task.FromResult<IQuarkTargetManager>(this);

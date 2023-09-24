@@ -1,9 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\Quark.Abstractions\Quark.Abstractions.csproj" />
     <ProjectReference Include="..\Quark\Quark.csproj" />
@@ -26,6 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Update="Roslynator.Analyzers" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

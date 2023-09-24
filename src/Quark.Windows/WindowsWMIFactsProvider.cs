@@ -19,18 +19,18 @@ public class WindowsWMIFactsProvider : IQuarkFactProvider
 
     public async Task<IQuarkResult> ExecuteAsync(IQuarkExecutionContext context, IQuarkTarget target)
     {
-        RunResult result = RunResult.Unknown;
+        QuarkRunResult result = QuarkRunResult.Unknown;
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             && target.TargetType == QuarkTargetTypes.Windows)
         {
             result = await GatherWindowsFacts(target)
-                ? RunResult.Success
-                : RunResult.Fail;
+                ? QuarkRunResult.Success
+                : QuarkRunResult.Fail;
         }
         else
         {
-            result = RunResult.NotImplemented;
+            result = QuarkRunResult.NotImplemented;
         }
 
         // Even if task says it succeeded for some reason,
@@ -38,13 +38,13 @@ public class WindowsWMIFactsProvider : IQuarkFactProvider
         // If this is intentional, store a single value in there.
         if (!target.Facts.Any())
         {
-            result = RunResult.Fail;
+            result = QuarkRunResult.Fail;
         }
 
         return new QuarkResult
         {
-            Result = result,
-            Target = target,
+            QuarkRunResult = result,
+            QuarkTarget = target,
         };
     }
 
@@ -63,7 +63,7 @@ public class WindowsWMIFactsProvider : IQuarkFactProvider
 
     private Task<bool> GatherWMIFacts(IQuarkTarget target)
     {
-        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+        if (!OperatingSystem.IsWindows())
         {
             return Task.FromResult(false);
         }

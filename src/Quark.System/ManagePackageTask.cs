@@ -8,24 +8,19 @@ using System.Threading.Tasks;
 
 namespace Quark.Systems;
 
-public class ManagePackageTask : IQuarkTask
+public class ManagePackageTask(string taskName, IQuarkPackage packageDescription, bool shouldExist) : IQuarkTask
 {
-    public IQuarkPackage PackageDescription { get; }
-    public bool ShouldExist { get; }
+    string IQuarkTask.TaskName { get; init; } = taskName;
+    public IQuarkPackage PackageDescription { get; } = packageDescription;
+    public bool ShouldExist { get; } = shouldExist;
 
     public List<IQuarkTarget> Targets { get; init; } = new();
-
-    public ManagePackageTask(IQuarkPackage packageDescription, bool shouldExist)
-    {
-        this.PackageDescription = packageDescription;
-        this.ShouldExist = shouldExist;
-    }
 
     public async Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTargetManager manager, IQuarkTarget target)
     {
         var result = target.TargetType == QuarkTargetTypes.Windows
             ? await WindowsExecuteAsync(context, target)
-            : QuarkResult.GetResult(RunResult.NotImplemented, target, this);
+            : QuarkResult.GetResult(QuarkRunResult.NotImplemented, target, this);
 
         return result;
     }
@@ -39,12 +34,12 @@ public class ManagePackageTask : IQuarkTask
         else
         {
             var result = await UninstallPackage(context, target);
-            if (result.Result is RunResult.Fail)
+            if (result.QuarkRunResult is QuarkRunResult.Fail)
             {
                 result = QuarkResult.GetResult(
-                    RunResult.Skipped,
-                    result.Target,
-                    result.Task);
+                    QuarkRunResult.Skipped,
+                    result.QuarkTarget,
+                    result.QuarkTask);
             }
 
             return result;
@@ -64,7 +59,7 @@ public class ManagePackageTask : IQuarkTask
 
                 logger.LogInformation("{PackageDescription} is already installed", this.PackageDescription);
 
-                return QuarkResult.GetResult(RunResult.Skipped, target, this);
+                return QuarkResult.GetResult(QuarkRunResult.Skipped, target, this);
             }
             else
             {
@@ -115,7 +110,7 @@ public class ManagePackageTask : IQuarkTask
             }
         }
 
-        return QuarkResult.GetResult(RunResult.Success, target, this);
+        return QuarkResult.GetResult(QuarkRunResult.Success, target, this);
     }
 
     private async Task<IQuarkResult> InstallPackage(QuarkContext context, IQuarkTarget target)
@@ -140,12 +135,13 @@ public class ManagePackageTask : IQuarkTask
             logger.LogInformation("{PackageDescription} is being installed: {FilePath} {Arguments}", this.PackageDescription, installFile.FullName, this.PackageDescription.GetArguments());
 
             var processResult = await pp.Start(installFile.FullName, this.PackageDescription.GetArguments());
-            if (processResult.ExitCode != 0)
+            if (processResult.ExitCode != 0
+                || processResult.Result != ProcessResultResult.Ran)
             {
                 return QuarkResult.GetFailed(target, this);
             }
         }
 
-        return QuarkResult.GetResult(RunResult.Success, target, this);
+        return QuarkResult.GetResult(QuarkRunResult.Success, target, this);
     }
 }

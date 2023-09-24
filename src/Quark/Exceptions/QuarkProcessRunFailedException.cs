@@ -4,7 +4,11 @@ using System;
 namespace Quark;
 
 [Serializable]
-public class QuarkProcessRunFailedException : Exception
+public class QuarkProcessRunFailedException(
+    ProcessResult processResult,
+    string? message,
+    Exception? innerException)
+    : Exception(message, innerException)
 {
     public QuarkProcessRunFailedException(ProcessResult processResult)
         : this(processResult, null)
@@ -16,9 +20,5 @@ public class QuarkProcessRunFailedException : Exception
     {
     }
 
-    public QuarkProcessRunFailedException(ProcessResult processResult, string? message, Exception? innerException)
-        : base(message, innerException)
-        => this.Result = processResult;
-
-    public ProcessResult Result { get; init; }
+    public ProcessResult Result { get; init; } = processResult;
 }

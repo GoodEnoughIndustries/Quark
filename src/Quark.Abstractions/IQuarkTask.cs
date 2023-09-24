@@ -5,7 +5,7 @@ namespace Quark.Abstractions;
 
 public interface IQuarkTask
 {
-    public string TaskName => this.GetType().Name;
+    public string TaskName { get; init; }
     List<IQuarkTarget> Targets { get; init; }
     Task<IQuarkResult> ExecuteAsync(QuarkContext context, IQuarkTargetManager manager, IQuarkTarget target);
 }

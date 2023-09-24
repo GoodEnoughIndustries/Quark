@@ -8,10 +8,12 @@ var adminCredential = new QuarkUserNamePasswordCredential("blah@gmail.com", "pas
 
 var configuration = new QuarkConfigurationBuilder()
     .WithQuarkFiles(path: @"C:\QuarkFiles")
-    .ManagePackage(Packages.WinDirStat, shouldExist: false)
+    .ManagePackage("Uninstall WinDirStat", Packages.WinDirStat, shouldExist: false)
     .WithTarget(target: "localhost", QuarkTargetTypes.Windows, async (context, manager, target) =>
     {
-        manager.ManagePackage(Packages.WinDirStat, shouldExist: true);
+        manager.ElevateAs(adminCredential);
+
+        manager.ManagePackage("Uninstall WinDirStat", Packages.WinDirStat, shouldExist: true);
         await manager.InstallChocolatey();
         await manager.ChocolateyPackage(context, "vscode", shouldExist: true);
 

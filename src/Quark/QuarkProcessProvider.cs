@@ -11,25 +11,12 @@ using System.Threading.Tasks;
 
 namespace Quark;
 
-public class QuarkProcessProvider : IQuarkProcessProvider
+public class QuarkProcessProvider(
+    ILogger<QuarkProcessProvider> logger,
+    IQuarkExecutionContext context,
+    IQuarkCredentialProvider credentialProvider,
+    IQuarkFileSystem fileSystem) : IQuarkProcessProvider
 {
-    private readonly ILogger<QuarkProcessProvider> logger;
-    private readonly IQuarkExecutionContext context;
-    private readonly IQuarkFileSystem fileSystem;
-    private readonly IQuarkCredentialProvider credentials;
-
-    public QuarkProcessProvider(
-        ILogger<QuarkProcessProvider> logger,
-        IQuarkExecutionContext context,
-        IQuarkCredentialProvider credentialProvider,
-        IQuarkFileSystem fileSystem)
-    {
-        this.logger = logger;
-        this.context = context;
-        this.fileSystem = fileSystem;
-        this.credentials = credentialProvider;
-    }
-
     // TODO: This is almost exactly from Cupboard - will work it more into a Quark pattern later.
     // Never used CliWrap before, still getting a feel.
     public async Task<ProcessResult> Start(string path, string? arguments = null, Func<string, bool>? filter = null, bool supressOutput = false)
@@ -44,39 +31,58 @@ public class QuarkProcessProvider : IQuarkProcessProvider
         var standardOut = new StringBuilder();
         var standardError = new StringBuilder();
         var exitCode = -1;
+        var result = ProcessResultResult.Unknown;
 
-        await foreach (var cmdEvent in cli.ListenAsync())
+        try
         {
-            switch (cmdEvent)
+            await foreach (var cmdEvent in cli.ListenAsync())
             {
-                case StartedCommandEvent started:
-                    break;
-                case StandardOutputCommandEvent output:
-                    standardOut.AppendLine(output.Text);
-                    if (!supressOutput && !string.IsNullOrWhiteSpace(output.Text) && (filter?.Invoke(output.Text) ?? true))
-                    {
-                        this.logger.LogInformation("OUT> {Text}", output.Text/*.EscapeMarkup()*/.TrimStart());
-                    }
+                switch (cmdEvent)
+                {
+                    case StartedCommandEvent started:
+                        break;
+                    case StandardOutputCommandEvent output:
+                        standardOut.AppendLine(output.Text);
+                        if (!supressOutput && !string.IsNullOrWhiteSpace(output.Text) && (filter?.Invoke(output.Text) ?? true))
+                        {
+                            logger.LogInformation("OUT> {Text}", output.Text/*.EscapeMarkup()*/.TrimStart());
+                        }
 
-                    break;
-                case StandardErrorCommandEvent error:
-                    if (!supressOutput && !string.IsNullOrWhiteSpace(error.Text) && (filter?.Invoke(error.Text) ?? true))
-                    {
-                        this.logger.LogError("ERR> {Text}", error.Text/*.EscapeMarkup()*/.TrimStart());
-                    }
+                        break;
+                    case StandardErrorCommandEvent error:
+                        if (!supressOutput && !string.IsNullOrWhiteSpace(error.Text) && (filter?.Invoke(error.Text) ?? true))
+                        {
+                            logger.LogError("ERR> {Text}", error.Text/*.EscapeMarkup()*/.TrimStart());
+                        }
 
-                    standardError.AppendLine(error.Text);
-                    break;
-                case ExitedCommandEvent exited:
-                    exitCode = exited.ExitCode;
-                    break;
+                        standardError.AppendLine(error.Text);
+                        break;
+                    case ExitedCommandEvent exited:
+                        exitCode = exited.ExitCode;
+                        result = ProcessResultResult.Ran;
+                        break;
+                }
             }
+        }
+        catch (Exception e)
+        {
+            logger.LogError("An issue trying to run something: {Exception}", e.Message);
+            if (result == ProcessResultResult.Unknown)
+            {
+                result = ProcessResultResult.UnableToRun;
+            }
+        }
+
+        if (result == ProcessResultResult.Unknown)
+        {
+            logger.LogDebug("Process run {Result} shouldn't be Unknown.", result);
         }
 
         return new ProcessResult(
             path,
             arguments,
             exitCode,
+            result,
             standardOut.ToString(),
             standardError.ToString());
     }
